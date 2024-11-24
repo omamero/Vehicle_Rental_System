@@ -10,10 +10,5 @@ public class Admin {
 
     }
 
-
-    public boolean isAuthorized(boolean isLoggedIn, String authorizeCode) {
-
-        return true;
-    }
     
 }
