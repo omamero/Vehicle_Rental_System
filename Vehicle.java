@@ -1,6 +1,6 @@
 package Vehicle_Rental_System;
 
-public class Vehicle {
+abstract public class Vehicle {
     // Public attributes
     public String name;
     public String model;

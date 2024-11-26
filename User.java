@@ -2,7 +2,7 @@ package Vehicle_Rental_System;
 
 
 
-public class User {
+ abstract public class User {
     
     private String firstName;
     private String secondName;
@@ -20,7 +20,7 @@ public class User {
     }
 
 
-    public void registerUser(String firstNmae, String secondName, String lastName, String phoneNumber, String email, String password, String userID) {
+    public void registerUser(String firstNmae, String secondName, String lastName, String phoneNumber, String email, String password, String userID, int age) {
 
         this.firstName = firstNmae;
         this.secondName = secondName;
@@ -29,12 +29,13 @@ public class User {
         this.email = email;
         this.password = password;
         this.userID = userID;
+        this.age = age;
     }
 
     public void logInUser(String email, String password) {
 
         if (isLoggedIn) {
-            System.out.println("  -- You are already logged in -- ");
+            System.out.println("  ! -- You are already logged in --  !");
         }
         else {
             if (email != this.email || password != this.password) {

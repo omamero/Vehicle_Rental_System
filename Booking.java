@@ -10,6 +10,7 @@ public class Booking extends Payment {
     private Date fromDate;
     private Date toDate;
     private int rentPeriodHr;
+    public boolean isBookingApproved;
 
     // Constructor
     public Booking(Vehicle vehicle, Date bookingDate, Date fromDate, Date toDate, double totalAmount, String currency, Date paymentDate) {
@@ -19,6 +20,7 @@ public class Booking extends Payment {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.rentPeriodHr = 0;
+        this.isBookingApproved = false;
     }
 
     // Setters and Getters
@@ -60,8 +62,6 @@ public class Booking extends Payment {
         }
     }
 
-    public void confirmBooking() {
-        System.out.println("Booking confirmed for vehicle: " + vehicle);
-    }
+
 }
 
