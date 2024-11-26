@@ -2,7 +2,7 @@ package Vehicle_Rental_System;
 
 import java.util.Date;
 
-public class Payment {
+abstract public class Payment {
     private double totalAmount;
     private String currency;
     private Date paymentDate;
