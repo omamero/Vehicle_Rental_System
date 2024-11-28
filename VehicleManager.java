@@ -1,5 +1,6 @@
 package Vehicle_Rental_System;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class VehicleManager {
@@ -10,12 +11,14 @@ public class VehicleManager {
     //Top-Level Domain
     private static final String TLD = "com";
     
-    private Vehicle[] vehicles;
+    private static Vehicle[] vehicles = new Vehicle[MAX_VEHICLES];
+    private static ArrayList<User> users = new ArrayList<User>();
+
     private int noVehicles;
     private int vehicleReserved;
 
     VehicleManager() {
-        this.vehicles = new Vehicle[VehicleManager.MAX_VEHICLES];
+
     }
 
     private static Scanner scanner = new Scanner(System.in);
@@ -31,7 +34,7 @@ public class VehicleManager {
         do {
 
             System.out.print(
-                "  ----  LOGIN PORTAL  ----  " + "\n" +
+                "\n\n  ----  LOGIN PORTAL  ----  " + "\n" +
                 "\n" +
                 "1 - For admins only" + "\n" +
                 "2 - For customers" + "\n" +
@@ -49,8 +52,9 @@ public class VehicleManager {
 
                 case 1:
 
+                int adminChoice = 0;
                     do {
-                        int adminChoice = 0;
+                        
                         System.out.print(
                             "\n\n  ----  ADMIN LOGIN  ----  "+ "\n" +
                             "\n" +
@@ -68,9 +72,9 @@ public class VehicleManager {
                         switch (adminChoice) {
                             
                             case 1:
-                                User admin = new Admin();
+                                User newAdmin = new Admin();
 
-                                String firstName = null, secondName, lastName, phoneNumber, email, newPassword, cnofirmPassword, adminID;
+                                String firstName = null, secondName, lastName, phoneNumber, email, newPassword, cnofirmPassword;
                                 int age;
                                 boolean isValid = false;
 
@@ -191,12 +195,69 @@ public class VehicleManager {
                                     
                                 } while (!isValid);
 
+                                // age
+                                do {
+
+                                    System.out.print("\n\n - Age: ");
+                                    age = scanner.nextInt();
+                                    
+                                    if (age > 18 && age < 65) {
+                                        isValid = true;
+                                    }
+                                    else {
+                                        System.out.print("\n\n  ! -- Sorry, age must be between 18 and 65 to register -- !");
+                                        isValid = false;
+                                    }
+
+                                } while (!isValid);
+
+                                // check if user available in users arrayList. If not, user will be registered and returned to ADMIN LOGIN menu
+                                boolean registerValid = true;
+                                String adminID = "0";
+
+                                if (VehicleManager.users != null) {
+                                    for (int i = 0; i < VehicleManager.users.size(); i++) {
+
+                                        if (VehicleManager.users.get(i).getPhoneNumber() == phoneNumber) {
+                                            registerValid = false;
+                                            System.out.print("\n\n  ! -- Phone number you entered appears to be in out system. Please try registering again with another phone number or login -- !");
+                                            break;
+                                        }
+                                        else if (VehicleManager.users.get(i).getEmail() == email) {
+                                            registerValid = false;
+                                            System.out.print("\n\n  ! -- Email address you entered appears to be in out system. Please try registering again with another email address or login -- !");
+                                            break;
+                                        }
+
+                                        adminID = String.valueOf(VehicleManager.users.size() - 1);
+                                    }
+                                }
+
+                                if (registerValid) {
+
+                                    newAdmin.registerUser(firstName, secondName, lastName, phoneNumber, email, newPassword, adminID, age);
+                                    VehicleManager.users.add(newAdmin);
+
+                                    System.out.print("\n\n ---- You have successfully registered. Now, you can login to enter to your account ----");
+                                }
+
+                                break;
+
+                            case 2:
+
                                 
 
                                 break;
-                        }
 
-                    } while (userChoice != 0);
+                            case 0:
+                                break;
+                            
+                            default:
+                                System.out.print("\n\n  ! -- Please enter a correct number from the menu -- !");
+                                break;
+                            }
+
+                    } while (adminChoice != 0);
                     break;
             }
 
@@ -207,7 +268,7 @@ public class VehicleManager {
 
     public void addVehicle(Vehicle newVehicle) {
         
-        this.vehicles[this.noVehicles] = newVehicle; 
+        VehicleManager.vehicles[this.noVehicles] = newVehicle; 
     }
 
     public void updateVehicle(Vehicle oldVehicle, Vehicle newVehicle) {
@@ -233,7 +294,7 @@ public class VehicleManager {
         }
         else {
             for (int i = indexToRemove; i < (this.noVehicles - 1); i++) {
-                this.vehicles[i] = this.vehicles[i + 1];
+                VehicleManager.vehicles[i] = VehicleManager.vehicles[i + 1];
             }
         }
     }
@@ -246,7 +307,7 @@ public class VehicleManager {
             return false;
         }
         else {
-            if (this.vehicles[vehicleIndex].isAvailable) {
+            if (VehicleManager.vehicles[vehicleIndex].isAvailable) {
                 return true;
             }
             else {
@@ -260,7 +321,7 @@ public class VehicleManager {
 
         for (int i = 0; i < this.noVehicles; i++) {
             
-            if (this.vehicles[i] == vehicle) {
+            if (VehicleManager.vehicles[i] == vehicle) {
                 return i;
             }
         }

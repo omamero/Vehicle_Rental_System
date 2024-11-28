@@ -20,9 +20,9 @@ package Vehicle_Rental_System;
     }
 
 
-    public void registerUser(String firstNmae, String secondName, String lastName, String phoneNumber, String email, String password, String userID, int age) {
+    public void registerUser(String firstName, String secondName, String lastName, String phoneNumber, String email, String password, String userID, int age) {
 
-        this.firstName = firstNmae;
+        this.firstName = firstName;
         this.secondName = secondName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
