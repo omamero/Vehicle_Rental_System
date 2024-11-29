@@ -32,18 +32,15 @@ package Vehicle_Rental_System;
         this.age = age;
     }
 
-    public void logInUser(String email, String password) {
+    public void logInUser() {
 
         if (isLoggedIn) {
-            System.out.println("  ! -- You are already logged in --  !");
+
+            System.out.print("\n\n  ! -- You are already logged in -- !");
         }
         else {
-            if (email != this.email || password != this.password) {
-                System.out.println("/n  !!! - Either email or password is incorrect - !!! ");
-            }
-            else {
-                isLoggedIn = true;
-            }
+            System.out.print("\n\n  -- You have successfully logged in --");
+            isLoggedIn = true;
         }
     }
 
@@ -51,10 +48,10 @@ package Vehicle_Rental_System;
 
         if (isLoggedIn) {
             isLoggedIn = false;
-            System.out.printf("  -- You have logged out -- ");
+            System.out.printf("  -- You have successfully logged out -- ");
         }
         else {
-            System.out.println(" -- You are already logged out -- ");
+            System.out.println("  -- You are already logged out -- ");
         }
     }
 
