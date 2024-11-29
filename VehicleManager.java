@@ -49,35 +49,303 @@ public class VehicleManager {
 
 
             
-            // ADMIN LOGIN
             switch (userChoice) {
-
+             
                 case 1:
 
-                int adminChoice = 0;
+                     // ADMIN LOGIN
+                    int adminChoice = 0;
+                        do {
+                            
+                            System.out.print(
+                                "\n\n  ----  ADMIN LOGIN  ----  "+ "\n" +
+                                "\n" +
+                                "1 - Admin Register"+ "\n" +
+                                "2 - Admin Login"+ "\n" +
+                                "0 - Go back to Login Portal"+ "\n" +
+                                "\n" +
+                                "Enter your choice: "
+                            );
+                            adminChoice = scanner.nextInt();
+                            scanner.nextLine(); // clear buffer
+
+                            
+
+                            switch (adminChoice) {
+                                
+                                case 1:
+                                    // admin registeration
+                                    User newAdmin = new Admin();
+
+                                    String firstName = null, secondName, lastName, phoneNumber, email, newPassword, cnofirmPassword;
+                                    int age;
+                                    boolean isValid = false;
+
+                                    // first name
+                                    do {
+
+                                        System.out.print("\n\n  - First name: ");
+
+                                        firstName = scanner.nextLine();
+                                        isValid = validateName(firstName);
+
+                                        if (!isValid) {
+                                            System.out.print("\n\n  ! -- The name can not be empty and can not have any digit or space-- !");
+                                        }
+
+                                    } while (!isValid);
+
+                                    // second name
+                                    do {
+                                        System.out.print("\n\n  - Second name: ");
+                                        secondName = scanner.nextLine();
+
+                                        isValid = validateName(secondName);
+
+                                        if (!isValid) {
+                                            System.out.print("\n\n  ! -- The name can not be empty and can not have any digit or space-- !");
+                                        }
+
+                                    } while (!isValid);
+
+                                    // last name
+                                    do {
+                                        System.out.print("\n\n  - Last name: ");
+                                        lastName = scanner.nextLine();
+
+                                        isValid = validateName(lastName);
+
+                                        if (!isValid) {
+                                            System.out.print("\n\n  ! -- The name can not be empty and can not have any digit or space -- !");
+                                        }
+
+                                    } while (!isValid);
+
+                                    // phone number
+                                    do {
+
+                                        boolean hasLetter = false;
+
+                                        System.out.print("\n\n - Phone number: ");
+                                        phoneNumber = scanner.nextLine();
+
+                                        for (char digit: phoneNumber.toCharArray()) {
+                                            
+                                            if (!Character.isDigit(digit)) {
+                                                hasLetter = true;
+                                                break;
+                                            }
+                                        }
+
+                                        if (hasLetter) {
+                                            isValid = false;
+                                            System.out.print("\n\n  ! -- Phone number must be digits only with no space -- !");
+                                        }
+                                        else {
+                                            isValid = true;
+                                        }
+                                        
+
+                                    } while (!isValid);
+
+                                    // email
+                                    do {
+                                        System.out.print("\n\n - Email: ");
+                                        email = scanner.next();
+                                        scanner.nextLine(); // clear buffer
+
+                                        isValid = validateEmail(email);
+
+                                        if (!isValid) {
+                                            System.out.print("\n\n  ! -- Email is invalid. Please enter email correctly -- !");
+                                        }
+
+                                    } while (!isValid);
+
+                                    // new password
+                                    do {
+
+                                        System.out.print(
+                                            "\n\n  ---- Password Rules ----" + "\n" +
+                                            "\n" +
+                                            " - Must be at least 8 characters length" + "\n" +
+                                            " - Must have at least 2 digits" + "\n" +
+                                            " - Must have at least 3 letters" + "\n" +
+                                            " - At least 1 letter uppercase and 1 letter lowercase" + "\n" +
+                                            " - Must have at least 2 special characters from the following: !@#$%^&*()-_=+[]{}|;:'\\\",.<>?/ " + "\n"
+                                        );
+
+                                        System.out.print("\n\n - New password: ");
+                                        newPassword = scanner.nextLine();
+
+                                        isValid = validatePassword(newPassword);
+
+                                        if (!isValid) {
+                                            System.out.print("\n\n  ! -- Password is invalid. Please check the rules provided -- !");
+                                            continue;
+                                        }
+
+                                        // confirm password
+                                        System.out.print("\n\n - Confirm password: ");
+                                        cnofirmPassword = scanner.nextLine();
+                                        
+                                        if (newPassword.equals(cnofirmPassword)) {
+                                            isValid = true;
+                                        }
+                                        else {
+                                            System.out.print("\n\n  ! -- There is no match between the two passwords -- !");
+                                            isValid = false;
+                                        }
+                                        
+                                    } while (!isValid);
+
+                                    // age
+                                    do {
+
+                                        System.out.print("\n\n - Age: ");
+                                        age = scanner.nextInt();
+                                        
+                                        if (age > 18 && age < 65) {
+                                            isValid = true;
+                                        }
+                                        else {
+                                            System.out.print("\n\n  ! -- Sorry, age must be between 18 and 65 to register -- !");
+                                            isValid = false;
+                                        }
+
+                                    } while (!isValid);
+
+                                    // check if user available in users arrayList. If not, user will be registered and returned to ADMIN LOGIN menu
+                                    boolean registerValid = true;
+                                    String adminID = "0";
+
+                                    if (VehicleManager.users != null) {
+                                        for (int i = 0; i < VehicleManager.users.size(); i++) {
+                                            
+                                            if (VehicleManager.users.get(i) instanceof Admin) {
+
+                                                // phone number stored before?
+                                                if (VehicleManager.users.get(i).getPhoneNumber() == phoneNumber) {
+                                                    registerValid = false;
+                                                    System.out.print("\n\n  ! -- Phone number you entered appears to be in our system. Please try registering again with another phone number or login -- !");
+                                                    break;
+                                                }
+                                                // email stored before?
+                                                else if (VehicleManager.users.get(i).getEmail() == email) {
+                                                    registerValid = false;
+                                                    System.out.print("\n\n  ! -- Email address you entered appears to be in our system. Please try registering again with another email address or login -- !");
+                                                    break;
+                                                } 
+                                            }
+                                            
+
+                                            adminID = String.valueOf(VehicleManager.users.size() - 1);
+                                        }
+                                    }
+
+                                    if (registerValid) {
+
+                                        newAdmin.registerUser(firstName, secondName, lastName, phoneNumber, email, newPassword, adminID, age);
+                                        VehicleManager.users.add(newAdmin);
+
+                                        System.out.print("\n\n ---- You have successfully registered. Now, you can login to enter to your account ----");
+                                    }
+
+                                    break;
+                
+                                case 2:
+                                    // admin login
+                                    String adminEmail = "";
+
+                                    // email
+                                    do {
+                                        System.out.print("\n\n - Email: ");
+                                        adminEmail = scanner.next();
+                                        scanner.nextLine(); // clear buffer
+
+                                        isValid = validateEmail(adminEmail);
+
+                                        if (!isValid) {
+                                            System.out.print("\n\n  ! -- Email is invalid. Please enter email correctly -- !");
+                                        }
+
+                                    } while (!isValid);
+
+                                    // password
+                                    String adminPassword = "";
+                                    System.out.print("\n\n - password: ");
+                                    adminPassword = scanner.nextLine();
+                                
+                                    boolean userFound = false;
+
+                                    User adminUser = null;
+                                    for (User user: VehicleManager.users) {
+
+                                        if (user instanceof Admin) {
+                                            
+                                            // check email
+                                            if (user.getEmail().equals(adminEmail)) {
+                                                adminUser = user;
+                                                userFound = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    if (userFound) {
+
+                                        // check password
+                                        if (adminUser.getPassword().equals(adminPassword)) {
+                                            VehicleManager.setCurrentUser(adminUser);
+                                        }
+                                        else {
+                                            System.out.print("\n\n  ! -- Password is incorrect -- !");
+                                        }                                        
+                                    }
+                                    else {
+                                        System.out.print("\n\n  ! -- Email is not available in our system -- !");
+                                    }
+                                
+                                    break;
+
+                                case 0:
+                                    break;
+                                
+                                default:
+                                    System.out.print("\n\n  ! -- Please enter a correct number from the menu -- !");
+                                    break;
+                                }
+
+                        } while (adminChoice != 0);
+                    
+                    break;
+
+                case 2:
+                
+                    // CUSTOMER LOGIN
+                    int customerChoice = 0;
                     do {
                         
                         System.out.print(
-                            "\n\n  ----  ADMIN LOGIN  ----  "+ "\n" +
+                            "\n\n  ----  CUSTOMER LOGIN  ----  "+ "\n" +
                             "\n" +
-                            "1 - Admin Register"+ "\n" +
-                            "2 - Admin Login"+ "\n" +
+                            "1 - Customer Register"+ "\n" +
+                            "2 - Customer Login"+ "\n" +
                             "0 - Go back to Login Portal"+ "\n" +
                             "\n" +
                             "Enter your choice: "
                         );
-                        adminChoice = scanner.nextInt();
+                        customerChoice = scanner.nextInt();
                         scanner.nextLine(); // clear buffer
 
                         
-
-                        switch (adminChoice) {
+                        switch (customerChoice) {
                             
-                            // admin registeration
                             case 1:
-                                User newAdmin = new Admin();
+                                // customer registeration
+                                User newCustomer = new Customer();
 
-                                String firstName = null, secondName, lastName, phoneNumber, email, newPassword, cnofirmPassword;
+                                String firstName, secondName, lastName, phoneNumber, email, newPassword, cnofirmPassword;
                                 int age;
                                 boolean isValid = false;
 
@@ -205,66 +473,66 @@ public class VehicleManager {
                                     System.out.print("\n\n - Age: ");
                                     age = scanner.nextInt();
                                     
-                                    if (age > 18 && age < 65) {
+                                    if (age > 18 && age < 100) {
                                         isValid = true;
                                     }
                                     else {
-                                        System.out.print("\n\n  ! -- Sorry, age must be between 18 and 65 to register -- !");
+                                        System.out.print("\n\n  ! -- Sorry, age must be between 18 and 100 to register -- !");
                                         isValid = false;
                                     }
 
                                 } while (!isValid);
 
-                                // check if user available in users arrayList. If not, user will be registered and returned to ADMIN LOGIN menu
+                                // check if user available in users arrayList. If not, user will be registered and returned to CUSTOMER LOGIN menu
                                 boolean registerValid = true;
-                                String adminID = "0";
+                                String customerID = "0";
 
                                 if (VehicleManager.users != null) {
                                     for (int i = 0; i < VehicleManager.users.size(); i++) {
                                         
-                                        if (VehicleManager.users.get(i) instanceof Admin) {
+                                        if (VehicleManager.users.get(i) instanceof Customer) {
 
                                             // phone number stored before?
                                             if (VehicleManager.users.get(i).getPhoneNumber() == phoneNumber) {
                                                 registerValid = false;
-                                                System.out.print("\n\n  ! -- Phone number you entered appears to be in out system. Please try registering again with another phone number or login -- !");
+                                                System.out.print("\n\n  ! -- Phone number you entered appears to be in our system. Please try registering again with another phone number or login -- !");
                                                 break;
                                             }
                                             // email stored before?
                                             else if (VehicleManager.users.get(i).getEmail() == email) {
                                                 registerValid = false;
-                                                System.out.print("\n\n  ! -- Email address you entered appears to be in out system. Please try registering again with another email address or login -- !");
+                                                System.out.print("\n\n  ! -- Email address you entered appears to be in our system. Please try registering again with another email address or login -- !");
                                                 break;
                                             } 
                                         }
                                         
 
-                                        adminID = String.valueOf(VehicleManager.users.size() - 1);
+                                        customerID = String.valueOf(VehicleManager.users.size() - 1);
                                     }
                                 }
 
                                 if (registerValid) {
 
-                                    newAdmin.registerUser(firstName, secondName, lastName, phoneNumber, email, newPassword, adminID, age);
-                                    VehicleManager.users.add(newAdmin);
+                                    newCustomer.registerUser(firstName, secondName, lastName, phoneNumber, email, newPassword, customerID, age);
+                                    VehicleManager.users.add(newCustomer);
 
                                     System.out.print("\n\n ---- You have successfully registered. Now, you can login to enter to your account ----");
                                 }
 
                                 break;
 
-                            // admin login
+                            // customer login
                             case 2:
-
-                                String adminEmail = "";
+                                // customer login
+                                String customerEmail = "";
 
                                 // email
                                 do {
                                     System.out.print("\n\n - Email: ");
-                                    adminEmail = scanner.next();
+                                    customerEmail = scanner.next();
                                     scanner.nextLine(); // clear buffer
 
-                                    isValid = validateEmail(adminEmail);
+                                    isValid = validateEmail(customerEmail);
 
                                     if (!isValid) {
                                         System.out.print("\n\n  ! -- Email is invalid. Please enter email correctly -- !");
@@ -273,42 +541,40 @@ public class VehicleManager {
                                 } while (!isValid);
 
                                 // password
-                                String adminPassword = "";
+                                String customerPassword = "";
                                 System.out.print("\n\n - password: ");
-                                adminPassword = scanner.nextLine();
-                               
+                                customerPassword = scanner.nextLine();
+                            
                                 boolean userFound = false;
-                                if (isValid) {
 
-                                    User adminUser = null;
-                                    for (User user: VehicleManager.users) {
+                                User customerUser = null;
+                                for (User user: VehicleManager.users) {
 
-                                        if (user instanceof Admin) {
-                                            
-                                            // check email
-                                            if (user.getEmail().equals(adminEmail)) {
-                                                adminUser = user;
-                                                userFound = true;
-                                                break;
-                                            }
+                                    if (user instanceof Customer) {
+                                        
+                                        // check email
+                                        if (user.getEmail().equals(customerEmail)) {
+                                            customerUser = user;
+                                            userFound = true;
+                                            break;
                                         }
-                                    }
-
-                                    if (userFound) {
-
-                                        // check password
-                                        if (adminUser.getPassword().equals(adminPassword)) {
-                                            VehicleManager.setCurrentUser(adminUser);
-                                        }
-                                        else {
-                                            System.out.print("\n\n  ! -- Password is incorrect -- !");
-                                        }                                        
-                                    }
-                                    else {
-                                        System.out.print("\n\n  ! -- Email is not available in our system -- !");
                                     }
                                 }
 
+                                if (userFound) {
+
+                                    // check password
+                                    if (customerUser.getPassword().equals(customerPassword)) {
+                                        VehicleManager.setCurrentUser(customerUser);
+                                    }
+                                    else {
+                                        System.out.print("\n\n  ! -- Password is incorrect -- !");
+                                    }                                        
+                                }
+                                else {
+                                    System.out.print("\n\n  ! -- Email is not available in our system -- !");
+                                }
+                                
                                 break;
 
                             case 0:
@@ -319,11 +585,17 @@ public class VehicleManager {
                                 break;
                             }
 
-                    } while (adminChoice != 0);
+                    } while (customerChoice != 0);
+                    
                     break;
-            }
 
-        } while (true);
+                case 0:
+                    
+                    System.out.print("\n\n BYE BYE --------------------");
+            }
+            
+
+        } while (userChoice != 0);
 
         
     }
