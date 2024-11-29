@@ -13,6 +13,7 @@ public class VehicleManager {
     
     private static Vehicle[] vehicles = new Vehicle[MAX_VEHICLES];
     private static ArrayList<User> users = new ArrayList<User>();
+    private static User currentUser;
 
     private int noVehicles;
     private int vehicleReserved;
@@ -31,6 +32,7 @@ public class VehicleManager {
 
         int userChoice = 0;
 
+        // LOGIN PORTAL
         do {
 
             System.out.print(
@@ -47,7 +49,7 @@ public class VehicleManager {
 
 
             
-
+            // ADMIN LOGIN
             switch (userChoice) {
 
                 case 1:
@@ -71,6 +73,7 @@ public class VehicleManager {
 
                         switch (adminChoice) {
                             
+                            // admin registeration
                             case 1:
                                 User newAdmin = new Admin();
 
@@ -182,6 +185,7 @@ public class VehicleManager {
                                         continue;
                                     }
 
+                                    // confirm password
                                     System.out.print("\n\n - Confirm password: ");
                                     cnofirmPassword = scanner.nextLine();
                                     
@@ -217,17 +221,23 @@ public class VehicleManager {
 
                                 if (VehicleManager.users != null) {
                                     for (int i = 0; i < VehicleManager.users.size(); i++) {
+                                        
+                                        if (VehicleManager.users.get(i) instanceof Admin) {
 
-                                        if (VehicleManager.users.get(i).getPhoneNumber() == phoneNumber) {
-                                            registerValid = false;
-                                            System.out.print("\n\n  ! -- Phone number you entered appears to be in out system. Please try registering again with another phone number or login -- !");
-                                            break;
+                                            // phone number stored before?
+                                            if (VehicleManager.users.get(i).getPhoneNumber() == phoneNumber) {
+                                                registerValid = false;
+                                                System.out.print("\n\n  ! -- Phone number you entered appears to be in out system. Please try registering again with another phone number or login -- !");
+                                                break;
+                                            }
+                                            // email stored before?
+                                            else if (VehicleManager.users.get(i).getEmail() == email) {
+                                                registerValid = false;
+                                                System.out.print("\n\n  ! -- Email address you entered appears to be in out system. Please try registering again with another email address or login -- !");
+                                                break;
+                                            } 
                                         }
-                                        else if (VehicleManager.users.get(i).getEmail() == email) {
-                                            registerValid = false;
-                                            System.out.print("\n\n  ! -- Email address you entered appears to be in out system. Please try registering again with another email address or login -- !");
-                                            break;
-                                        }
+                                        
 
                                         adminID = String.valueOf(VehicleManager.users.size() - 1);
                                     }
@@ -243,9 +253,61 @@ public class VehicleManager {
 
                                 break;
 
+                            // admin login
                             case 2:
 
-                                
+                                String adminEmail = "";
+
+                                // email
+                                do {
+                                    System.out.print("\n\n - Email: ");
+                                    adminEmail = scanner.next();
+                                    scanner.nextLine(); // clear buffer
+
+                                    isValid = validateEmail(adminEmail);
+
+                                    if (!isValid) {
+                                        System.out.print("\n\n  ! -- Email is invalid. Please enter email correctly -- !");
+                                    }
+
+                                } while (!isValid);
+
+                                // password
+                                String adminPassword = "";
+                                System.out.print("\n\n - password: ");
+                                adminPassword = scanner.nextLine();
+                               
+                                boolean userFound = false;
+                                if (isValid) {
+
+                                    User adminUser = null;
+                                    for (User user: VehicleManager.users) {
+
+                                        if (user instanceof Admin) {
+                                            
+                                            // check email
+                                            if (user.getEmail().equals(adminEmail)) {
+                                                adminUser = user;
+                                                userFound = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    if (userFound) {
+
+                                        // check password
+                                        if (adminUser.getPassword().equals(adminPassword)) {
+                                            VehicleManager.setCurrentUser(adminUser);
+                                        }
+                                        else {
+                                            System.out.print("\n\n  ! -- Password is incorrect -- !");
+                                        }                                        
+                                    }
+                                    else {
+                                        System.out.print("\n\n  ! -- Email is not available in our system -- !");
+                                    }
+                                }
 
                                 break;
 
@@ -434,7 +496,16 @@ public class VehicleManager {
             return false;
         }
     }
-    
+ 
+    public static void setCurrentUser(User user) {
+        
+        user.logInUser();
+        VehicleManager.currentUser = user;
+    }
+
+    public static User getCurrentUser() {
+        return VehicleManager.currentUser;
+    }
 }
 
 
