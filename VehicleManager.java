@@ -15,8 +15,8 @@ public class VehicleManager {
     private static ArrayList<User> users = new ArrayList<User>();
     private static User currentUser;
 
-    private int noVehicles;
-    private int vehicleReserved;
+    private static int noVehicles;
+    private static int vehicleReserved;
 
     VehicleManager() {
 
@@ -31,6 +31,7 @@ public class VehicleManager {
         );
 
         int userChoice = 0;
+        boolean userFound = false;
 
         // LOGIN PORTAL
         do {
@@ -40,7 +41,7 @@ public class VehicleManager {
                 "\n" +
                 "1 - For admins only" + "\n" +
                 "2 - For customers" + "\n" +
-                "3 - Exit" + "\n" +
+                "0 - Exit" + "\n" +
                 "\n" +
                 "Enter your choice: "
             );
@@ -276,7 +277,7 @@ public class VehicleManager {
                                     System.out.print("\n\n - password: ");
                                     adminPassword = scanner.nextLine();
                                 
-                                    boolean userFound = false;
+                                    userFound = false;
 
                                     User adminUser = null;
                                     for (User user: VehicleManager.users) {
@@ -316,7 +317,7 @@ public class VehicleManager {
                                     break;
                                 }
 
-                        } while (adminChoice != 0);
+                        } while (adminChoice != 0 && VehicleManager.getCurrentUser() == null);
                     
                     break;
 
@@ -545,7 +546,7 @@ public class VehicleManager {
                                 System.out.print("\n\n - password: ");
                                 customerPassword = scanner.nextLine();
                             
-                                boolean userFound = false;
+                                userFound = false;
 
                                 User customerUser = null;
                                 for (User user: VehicleManager.users) {
@@ -585,7 +586,7 @@ public class VehicleManager {
                                 break;
                             }
 
-                    } while (customerChoice != 0);
+                    } while (customerChoice != 0 && VehicleManager.getCurrentUser() == null);
                     
                     break;
 
@@ -595,19 +596,169 @@ public class VehicleManager {
             }
             
 
-        } while (userChoice != 0);
+        } while (userChoice != 0 && VehicleManager.getCurrentUser() == null);
+
+        // if user entered 0, the program terminates here
+        if (userChoice == 0) {
+            return;
+        }
+
+
+        if (VehicleManager.currentUser instanceof Admin) {
+
+            int adminChoice = 0;
+
+            // Admin menu
+
+            System.out.print("\n\n\n  ---- WELCOME " + VehicleManager.currentUser.getUserName() + " ----");
+            do {
+
+                System.out.print(
+                    "\n\n  ---- MAIN MENU ----" + "\n" +
+                    "\n" +
+                    "1 - View available vehicles" + "\n" +
+                    "2 - Add a vehicle" + "\n" +
+                    "3 - Update a vehicle" + "\n" +
+                    "3 - Remove a vehicle" + "\n" +
+                    "4 - View all current bookings" + "\n" +
+                    "5 - Bookings waiting approval" + "\n" + 
+                    "0 - Log out" + "\n" +
+                    "\n" +
+                    "  - Enter your choice: "
+                );
+                adminChoice = scanner.nextInt();
+                scanner.nextLine(); // clear buffer
+
+
+                switch (adminChoice) {
+
+                    case 1: 
+
+                        printAvailableVehicles();
+                        break;
+
+                    case 2:
+
+                        int VehicleChoice = 0;
+
+                        System.out.print(
+                            "\n\n - Type of vehicle to add:" + "\n" +
+                            "    1. Car" + "\n" +
+                            "    2. Van" + "\n" +
+                            "    3. Motorcycle"
+                        );
+                        VehicleChoice = scanner.nextInt();
+                        scanner.nextLine(); // clear buffer
+
+                        String name, model, fuelType, make, color;
+                        boolean hasInsurance, isAvailable;
+                        int year, noSeats;
+                        double price;
+
+                        System.out.print("\n\n - name: ");
+                        name = scanner.nextLine();
+
+                        System.out.print("\n\n - model: ");
+                        model = scanner.nextLine();
+
+                        System.out.print("\n\n - fuel type: ");
+                        fuelType = scanner.nextLine();
+
+                        System.out.print("\n\n - make: ");
+                        make = scanner.nextLine();
+
+                        System.out.print("\n\n - color: ");
+                        color = scanner.nextLine();
+
+                        System.out.print("\n\n - Has insurance? (1 for yes, 0 for no): ");
+                        hasInsurance = scanner.nextBoolean();
+
+                        System.out.print("\n\n - Is it available? (1 for yes, 0 for no): ");
+                        isAvailable = scanner.nextBoolean();
+
+                        System.out.print("\n\n - model year: ");
+                        year = scanner.nextInt();
+                        
+                        System.out.print("\n\n - number of seats: ");
+                        noSeats = scanner.nextInt();
+
+                        System.out.print("\n\n - Price: ");
+                        price = scanner.nextDouble();
+
+                        
+
+                        break;
+                }
+
+
+            } while (adminChoice != 0);
+
+        }
 
         
+        if (VehicleManager.currentUser instanceof Customer) {
+
+            int customerChoice = 0;
+
+            // Customer menu
+
+            System.out.print("\n\n\n  ---- WELCOME " + VehicleManager.currentUser.getUserName() + " ----");
+            do {
+
+                System.out.print(
+                    "\n\n  ---- MAIN MENU ----" + "\n" +
+                    "\n" +
+                    "1 - View available vehicles" + "\n" +
+                    "2 - Book a vehicle" + "\n" +
+                    "3 - Cancel a booking" + "\n" +
+                    "4 - View my bookings" + "\n" +
+                    "0 - Log out" + "\n" +
+                    "\n" +
+                    "  - Enter your choice: "
+                );
+                customerChoice = scanner.nextInt();
+                scanner.nextLine(); // clear buffer
+
+
+                switch (customerChoice) {
+
+                    case 1:
+                    
+                        printAvailableVehicles();
+                        break;
+                
+                    case 2:
+                    
+                        break;
+
+                    case 3:
+
+                        break;
+
+                    case 4:
+
+                        break;
+
+
+                    default:
+                        break;
+                }
+
+            } while (customerChoice != 0);
+        }
+
+
+
     }
 
-    public void addVehicle(Vehicle newVehicle) {
+    public static void addVehicle(Vehicle newVehicle) {
         
-        VehicleManager.vehicles[this.noVehicles] = newVehicle; 
+        VehicleManager.vehicles[VehicleManager.noVehicles] = newVehicle; 
     }
 
-    public void updateVehicle(Vehicle oldVehicle, Vehicle newVehicle) {
+    public static void updateVehicle(Vehicle oldVehicle, Vehicle newVehicle) {
 
-        for (int i = 0; i < this.noVehicles; i++) {
+        for (int i = 0; i < VehicleManager.noVehicles; i++) {
             
             if (vehicles[i] == oldVehicle) {
                 vehicles[i] = newVehicle;
@@ -619,15 +770,15 @@ public class VehicleManager {
         }
     }
 
-    public void deleteVehicle(Vehicle vehicleToRemove) {
+    public static void deleteVehicle(Vehicle vehicleToRemove) {
 
-        int indexToRemove = this.searchVehicleIndex(vehicleToRemove);
+        int indexToRemove = VehicleManager.searchVehicleIndex(vehicleToRemove);
 
         if (indexToRemove < 0) {
             System.out.println("  -- There is no vehicle with the name: " + vehicleToRemove.name);
         }
         else {
-            for (int i = indexToRemove; i < (this.noVehicles - 1); i++) {
+            for (int i = indexToRemove; i < (VehicleManager.noVehicles - 1); i++) {
                 VehicleManager.vehicles[i] = VehicleManager.vehicles[i + 1];
             }
         }
@@ -650,10 +801,140 @@ public class VehicleManager {
         }
     }
 
-    // if not found: returns -1
-    public int searchVehicleIndex(Vehicle vehicle) {
+    public static Vehicle[] getAvailableVehicles() {
 
-        for (int i = 0; i < this.noVehicles; i++) {
+        int counter = 0;
+        boolean allNull = true;
+        Vehicle[] availableVehicles = new Vehicle[VehicleManager.MAX_VEHICLES - VehicleManager.vehicleReserved];
+        
+        for (int i = 0; i < VehicleManager.vehicles.length; i++) {
+
+            if (VehicleManager.vehicles[i] != null) {
+
+                if (VehicleManager.vehicles[i].isAvailable) {
+
+                    availableVehicles[counter] = VehicleManager.vehicles[i];
+                    counter++;
+                }
+            }
+
+        }
+
+        // check if all elements are null
+        for (Vehicle vehicle: availableVehicles) {
+
+            if (vehicle != null) {
+                allNull = false;
+                break;
+            }
+        }
+
+        if (allNull) {
+            return null;
+        }
+
+        return availableVehicles;
+    }
+
+    public static void printAvailableVehicles() {
+
+        Vehicle[] availableVehicles = getAvailableVehicles();
+
+        int counter = 0;
+        boolean allNull = true;
+
+        if (availableVehicles == null) {
+            System.out.print("\n\n  ! -- There are no available vehicles at this time -- !");
+            return;
+        }
+
+        // cars list
+        System.out.print("\n\n  ---- Available Cars ----");
+        for (int i = 0; i < availableVehicles.length; i++) {
+
+            if (availableVehicles[i] instanceof Car) {
+
+                Car car = (Car) availableVehicles[i];
+
+                System.out.print(
+                    "\n\n - " + (counter + 1) + ". " + (car.name) + "\n" +
+                    "    - Vehicle ID: " + car.getVehicleID() + "\n" +
+                    "    - Make: " + car.getMake() + "\n" +
+                    "    - Model: " + car.model + "\n" +
+                    "    - Model Year: " + car.getYear() + "\n" +
+                    "    - Transmission Type: " + car.getTransmissionType() + "\n" +
+                    "    - Fuel Type: " + car.fuelType + "\n" +
+                    "    - Color: " + car.getColor() + "\n" +
+                    "    - Number of Seats: " + car.getNoSeats() + "\n" +
+                    "    - Has insurance: " + (car.hasInsurance ? "Yes": "No") + "\n" +
+                    "    - Price: " + car.getPrice()
+                );
+
+                counter++;
+            }
+        }
+
+        counter = 0;
+        // vans list
+        System.out.print("\n\n  ---- Available Vans ----");
+        for (int i = 0; i < availableVehicles.length; i++) {
+
+            if (availableVehicles[i] instanceof Van) {
+
+                Van van = (Van) availableVehicles[i];
+                
+                System.out.print(
+                    "\n\n - " + (counter + 1) + ". " + (van.name) + "\n" +
+                    "    - Vehicle ID: " + van.getVehicleID() + "\n" +
+                    "    - Make: " + van.getMake() + "\n" +
+                    "    - Model: " + van.model + "\n" +
+                    "    - Model Year: " + van.getYear() + "\n" +
+                    "    - Fuel Type: " + van.fuelType + "\n" +
+                    "    - Color: " + van.getColor() + "\n" +
+                    "    - Number of Seats: " + van.getNoSeats() + "\n" +
+                    "    - Cargo space (cubic feet): " + van.getCargoSpace() + "\n" +
+                    "    - Maximum Load (Kg): " + van.getMaxLoad() + "\n" +
+                    "    - Has insurance: " + (van.hasInsurance ? "Yes": "No") + "\n" +
+                    "    - Price: " + van.getPrice()
+                );
+
+                counter++;
+            }
+        }
+
+        counter = 0;
+        // motorcycles list
+        System.out.print("\n\n  ---- Available Motorcycles ----");
+        for (int i = 0; i < availableVehicles.length; i++) {
+
+            if (availableVehicles[i] instanceof MotorCycle) {
+
+                MotorCycle motorCycle = (MotorCycle) availableVehicles[i];
+                
+                System.out.print(
+                    "\n\n - " + (counter + 1) + ". " + (motorCycle.name) + "\n" +
+                    "    - Vehicle ID: " + motorCycle.getVehicleID() + "\n" +
+                    "    - Make: " + motorCycle.getMake() + "\n" +
+                    "    - Model: " + motorCycle.model + "\n" +
+                    "    - Model Year: " + motorCycle.getYear() + "\n" +
+                    "    - Type of Handle Bar: " + motorCycle.getHandleBar() + "\n" +
+                    "    - Licence Required: " + (motorCycle.isLicenseRequired() ? "Yes": "No") + "\n" +
+                    "    - Fuel Type: " + motorCycle.fuelType + "\n" +
+                    "    - Color: " + motorCycle.getColor() + "\n" +
+                    "    - Number of Seats: " + motorCycle.getNoSeats() + "\n" +
+                    "    - Has insurance: " + (motorCycle.hasInsurance ? "Yes": "No") + "\n" +
+                    "    - Price: " + motorCycle.getPrice()
+                );
+
+                counter++;
+            }
+        }
+
+    }
+    // if not found: returns -1
+    public static int searchVehicleIndex(Vehicle vehicle) {
+
+        for (int i = 0; i < VehicleManager.noVehicles; i++) {
             
             if (VehicleManager.vehicles[i] == vehicle) {
                 return i;
@@ -778,6 +1059,10 @@ public class VehicleManager {
     public static User getCurrentUser() {
         return VehicleManager.currentUser;
     }
+
+
+
+
 }
 
 
