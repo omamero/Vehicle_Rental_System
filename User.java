@@ -2,7 +2,7 @@ package Vehicle_Rental_System;
 
 
 
- abstract public class User {
+public abstract class User {
     
     private String firstName;
     private String secondName;
