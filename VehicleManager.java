@@ -755,32 +755,103 @@ public class VehicleManager {
                 }
         
                 switch (customerChoice) {
-                    case 1:
-                        printAvailableVehicles();
-                        break;
-        
-                    case 2:
-                        System.out.println("\n\n  ---- BOOK A VEHICLE ----");
-                        // Provide booking logic
-                        break;
-        
-                    case 3:
-                        System.out.println("\n\n  ---- CANCEL A BOOKING ----");
-                        // Provide cancel booking logic
-                        break;
-        
-                    case 4:
-                        System.out.println("\n\n  ---- VIEW MY BOOKINGS ----");
-                        // Show customer bookings
-                        break;
-        
-                    case 0:
-                        System.out.println("\n\n Logging out...");
-                        break;
-        
-                    default:
-                        System.out.println("\n  ! -- Invalid choice. Please select a valid menu option. -- !");
-                }
+                case 1:
+                    printAvailableVehicles(); // Assuming this method prints all available vehicles
+                    break;
+            
+                case 2:
+                    System.out.println("\n\n  ---- BOOK A VEHICLE ----");
+                    // Provide booking logic
+                    System.out.print("Enter customer ID to book a vehicle: ");
+                    int customerIdForBooking = scanner.nextInt();
+                    Customer customerForBooking = customerManager.getCustomerById(customerIdForBooking); // Assuming customerManager exists
+                    if (customerForBooking != null && customerForBooking.isEligible()) {
+                        // Get the available vehicle
+                        System.out.print("Enter vehicle ID to book: ");
+                        int vehicleIdForBooking = scanner.nextInt();
+                        Vehicle vehicleToBook = vehicleManager.getVehicleById(vehicleIdForBooking); // Assuming vehicleManager exists
+                        if (vehicleToBook != null) {
+                            // Check if the customer can book more vehicles (limit to 3 bookings)
+                            if (customerForBooking.noVehiclesRented < Customer.MAX_BOOKINGS) {
+                                System.out.println("Enter booking details: ");
+                                System.out.print("From Date (yyyy-mm-dd): ");
+                                String fromDateString = scanner.next(); // Replace with appropriate date parsing
+                                Date fromDate = Date.valueOf(fromDateString); // Assuming Date format is yyyy-mm-dd
+                                System.out.print("To Date (yyyy-mm-dd): ");
+                                String toDateString = scanner.next();
+                                Date toDate = Date.valueOf(toDateString); // Assuming Date format is yyyy-mm-dd
+            
+                                System.out.print("Enter total amount for rental: ");
+                                double totalAmount = scanner.nextDouble();
+            
+                                System.out.print("Enter currency: ");
+                                String currency = scanner.next();
+            
+                                // Create booking using the `Booking` class method
+                                Booking newBooking = new Booking(vehicleToBook, new Date(), fromDate, toDate, totalAmount, currency, new Date());
+                                customerForBooking.bookings[customerForBooking.noVehiclesRented++] = newBooking; // Add booking to customer's bookings array
+                                System.out.println("Booking successful!");
+                            } else {
+                                System.out.println("You have reached the maximum number of bookings.");
+                            }
+                        } else {
+                            System.out.println("Vehicle not found.");
+                        }
+                    } else {
+                        System.out.println("Customer is not eligible to rent a vehicle or customer not found.");
+                    }
+                    break;
+            
+                case 3:
+                    System.out.println("\n\n  ---- CANCEL A BOOKING ----");
+                    // Provide cancel booking logic
+                    System.out.print("Enter customer ID to cancel a booking: ");
+                    int customerIdForCancel = scanner.nextInt();
+                    Customer customerForCancel = customerManager.getCustomerById(customerIdForCancel);
+                    if (customerForCancel != null) {
+                        System.out.print("Enter booking ID to cancel: ");
+                        int bookingIdToCancel = scanner.nextInt();
+                        if (bookingIdToCancel >= 0 && bookingIdToCancel < customerForCancel.noVehiclesRented) {
+                            // Cancel the booking by setting it to null
+                            customerForCancel.bookings[bookingIdToCancel] = null; // Remove booking
+                            customerForCancel.noVehiclesRented--; // Decrease rented vehicles count
+                            System.out.println("Booking cancelled successfully.");
+                        } else {
+                            System.out.println("Booking ID not valid.");
+                        }
+                    } else {
+                        System.out.println("Customer not found.");
+                    }
+                    break;
+            
+                case 4:
+                    System.out.println("\n\n  ---- VIEW MY BOOKINGS ----");
+                    // Show customer bookings
+                    System.out.print("Enter customer ID to view bookings: ");
+                    int customerIdForViewBookings = scanner.nextInt();
+                    Customer customerForViewBookings = customerManager.getCustomerById(customerIdForViewBookings);
+                    if (customerForViewBookings != null) {
+                        System.out.println("Customer's Bookings:");
+                        if (customerForViewBookings.noVehiclesRented > 0) {
+                            for (int i = 0; i < customerForViewBookings.noVehiclesRented; i++) {
+                                System.out.println(customerForViewBookings.bookings[i]); // Assuming Booking class has a proper toString() method
+                            }
+                        } else {
+                            System.out.println("No bookings found for this customer.");
+                        }
+                    } else {
+                        System.out.println("Customer not found.");
+                    }
+                    break;
+            
+                case 0:
+                    System.out.println("\n\n Logging out...");
+                    break;
+            
+                default:
+                    System.out.println("\n  ! -- Invalid choice. Please select a valid menu option. -- !");
+            }
+
         
             } while (customerChoice != 0);
         }
