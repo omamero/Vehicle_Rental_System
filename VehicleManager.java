@@ -693,37 +693,86 @@ public class VehicleManager {
                             }
                         } while (!validType);
                         break;
-        
-                    case 3:
+                        case 3:
                         System.out.println("\n\n  ---- UPDATE VEHICLE ----");
-                        // Provide vehicle update logic
+                        // Logic to update vehicle details
+                        System.out.print("Enter vehicle ID to update: ");
+                        int vehicleIdToUpdate = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline
+                        Vehicle vehicleToUpdate = vehicleManager.getVehicleById(vehicleIdToUpdate); // Assuming vehicleManager exists
+                        if (vehicleToUpdate != null) {
+                            System.out.print("Enter new vehicle name: ");
+                            String newName = scanner.nextLine();
+                            System.out.print("Enter new vehicle type: ");
+                            String newType = scanner.nextLine();
+                            vehicleToUpdate.setName(newName);
+                            vehicleToUpdate.setType(newType);
+                            System.out.println("Vehicle updated successfully!");
+                        } else {
+                            System.out.println("Vehicle not found.");
+                        }
                         break;
-        
-                    case 4:
-                        System.out.println("\n\n  ---- REMOVE VEHICLE ----");
-                        // Provide vehicle removal logic
-                        break;
-        
-                    case 5:
-                        System.out.println("\n\n  ---- VIEW ALL BOOKINGS ----");
-                        // Show all bookings
-                        break;
-        
-                    case 6:
-                        System.out.println("\n\n  ---- APPROVE/REJECT BOOKINGS ----");
-                        // Approve or reject bookings
-                        break;
-        
-                    case 7:
-                        System.out.println("\n\n Logging out...");
-                        break;
-        
-                    default:
-                        System.out.println("\n  ! -- Invalid choice. Please select a valid menu option -- !");
-                }
-        
-            } while (adminChoice != 7);
-        }
+
+                        case 4:
+                            System.out.println("\n\n  ---- REMOVE VEHICLE ----");
+                            // Logic to remove a vehicle
+                            System.out.print("Enter vehicle ID to remove: ");
+                            int vehicleIdToRemove = scanner.nextInt();
+                            boolean removed = vehicleManager.removeVehicleById(vehicleIdToRemove); // Assuming removeVehicleById exists
+                            if (removed) {
+                                System.out.println("Vehicle removed successfully!");
+                            } else {
+                                System.out.println("Vehicle not found or could not be removed.");
+                            }
+                            break;
+                        
+                        case 5:
+                            System.out.println("\n\n  ---- VIEW ALL BOOKINGS ----");
+                            // Logic to display all bookings
+                            List<Booking> allBookings = bookingManager.getAllBookings(); // Assuming bookingManager exists
+                            if (allBookings.isEmpty()) {
+                                System.out.println("No bookings available.");
+                            } else {
+                                System.out.println("---- All Bookings ----");
+                                for (Booking booking : allBookings) {
+                                    System.out.println(booking); // Ensure Booking class has a proper toString method
+                                }
+                            }
+                            break;
+                        
+                        case 6:
+                            System.out.println("\n\n  ---- APPROVE/REJECT BOOKINGS ----");
+                            // Logic to approve or reject bookings
+                            System.out.print("Enter booking ID to approve/reject: ");
+                            int bookingId = scanner.nextInt();
+                            Booking bookingToReview = bookingManager.getBookingById(bookingId); // Assuming getBookingById exists
+                            if (bookingToReview != null) {
+                                System.out.print("Approve (A) or Reject (R): ");
+                                char decision = scanner.next().toUpperCase().charAt(0);
+                                if (decision == 'A') {
+                                    bookingToReview.isBookingApproved = true;
+                                    System.out.println("Booking approved successfully!");
+                                    } else if (decision == 'R') {
+                                    bookingManager.cancelBooking(bookingToReview.getVehicle()); // Assuming cancelBooking exists
+                                    System.out.println("Booking rejected and removed.");
+                                    } else {
+                                    System.out.println("Invalid input. Please enter A or R.");
+                                        }
+                                        } else {
+                                        System.out.println("Booking not found.");
+                                        }
+                                        break;
+
+                        case 7:
+                            System.out.println("\n\n Logging out...");
+                            break;
+            
+                        default:
+                            System.out.println("\n  ! -- Invalid choice. Please select a valid menu option -- !");
+                    }
+            
+                } while (adminChoice != 7);
+            }
         
 
         
