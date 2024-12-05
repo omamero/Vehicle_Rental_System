@@ -8,16 +8,16 @@ abstract public class Vehicle {
     public boolean hasInsurance;
     public boolean isAvailable;
 
-    // Private attributes
-    private String vehicleID;
-    private String make;
-    private int year;
-    private double price;
-    private int noSeats;
-    private String color;
+    // Protected attributes
+    protected String vehicleID;
+    protected String make;
+    protected int year;
+    protected double price;
+    protected int noSeats;
+    protected String color;
 
     // Constructor
-    public Vehicle(String vehicleID, String name, String model, String fuelType, 
+    Vehicle(String vehicleID, String name, String model, String fuelType, 
                    int year, double price, int noSeats, String make, 
                    String color, boolean hasInsurance, boolean isAvailable) {
         this.vehicleID = vehicleID;
@@ -74,6 +74,10 @@ abstract public class Vehicle {
         this.color = color;
     }
 
+    public void setVehicleID(String vehicleID) {
+        this.vehicleID = vehicleID;
+    }
+    
     public String getVehicleID() {
         return vehicleID;
     }

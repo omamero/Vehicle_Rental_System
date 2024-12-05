@@ -12,16 +12,13 @@ public class Admin extends User {
 
     }
 
-    public boolean isAuthorized(boolean isLoggedIn, String authorizeCode) {
+    public boolean isAuthorized(String authorizeCode) {
 
-        if (isLoggedIn) {
-            
-            if (authorizeCode == Admin.AUTHORIZE_CODE) {
-                return true;
-            }
+        if (authorizeCode == Admin.AUTHORIZE_CODE) {
+            return true;
         }
 
-    return false;
+        return false;
     }
 
     public void approveBooking(Booking book) {

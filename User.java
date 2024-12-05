@@ -2,7 +2,7 @@ package Vehicle_Rental_System;
 
 
 
-public abstract class User {
+public abstract class User implements IUser {
     
     private String firstName;
     private String secondName;
@@ -19,7 +19,7 @@ public abstract class User {
     
     }
 
-
+    @Override
     public void registerUser(String firstName, String secondName, String lastName, String phoneNumber, String email, String password, String userID, int age) {
 
         this.firstName = firstName;
@@ -32,6 +32,7 @@ public abstract class User {
         this.age = age;
     }
 
+    @Override
     public void logInUser() {
 
         if (isLoggedIn) {
@@ -44,6 +45,7 @@ public abstract class User {
         }
     }
 
+    @Override
     public void logOutUser() {
 
         if (isLoggedIn) {
@@ -55,6 +57,7 @@ public abstract class User {
         }
     }
 
+    @Override
     public void setUserName(String firstName, String secondName, String lastName) {
         this.firstName = firstName;
         this.secondName = secondName;
@@ -65,6 +68,7 @@ public abstract class User {
         return ("" + this.firstName + " " + this.secondName + " " + this.lastName);
     }
 
+    @Override
     public void setAge(int age) {
         this.age = age;
     }
@@ -73,6 +77,7 @@ public abstract class User {
         return this.age;
     }
 
+    @Override
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
@@ -81,6 +86,7 @@ public abstract class User {
         return this.phoneNumber;
     }
 
+    @Override
     public void setEmail(String email) {
         this.email = email;
     }
@@ -89,14 +95,16 @@ public abstract class User {
         return this.email;
     }
 
-    public void setPassword(String newPassowrd) {
-        this.password = password;
+    @Override
+    public void setPassword(String newPassword) {
+        this.password = newPassword;
     }
 
     public String getPassword() {
         return this.password;
     }
 
+    @Override
     public void setUserID(String userID) {
         this.userID = userID;
     }
@@ -105,6 +113,7 @@ public abstract class User {
         return this.userID;
     }
 
+    @Override
     public boolean isLoggedIn() {
         
         if (isLoggedIn) {

@@ -18,6 +18,7 @@ public class VehicleManager {
     private static int noVehicles;
     private static int vehicleReserved;
 
+    
     VehicleManager() {
 
     }
@@ -25,6 +26,29 @@ public class VehicleManager {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
+
+                //------------------------------------------------------------------------------- FOR TEST PURPOSES
+                User admin1 = new Admin();
+                admin1.registerUser("Ali", "Mohammed", "Hasan", "0559645334", "ali@gmail.com", "Ali11!!", "1", 19);
+                VehicleManager.users.add(admin1);
+        
+                Vehicle car1 = new Car(
+                    "1",
+                    "2022 Toyota Camry",
+                    "Camry",
+                    "Gasoline",
+                    2022,
+                    200,
+                    5,
+                    "Toyota",
+                    "Silver",
+                    "Automatic",
+                    true,
+                    true
+                );
+                VehicleManager.vehicles[Integer.parseInt(car1.getVehicleID())] = car1;
+
+                //------------------------------------------------------------------------------- FOR TEST PURPOSES
         
         System.out.println(
             "\n\n  ----  WELCOME TO VEHICLE RENTAL SYSTEM  ----  \n\n"
@@ -607,106 +631,97 @@ public class VehicleManager {
         if (VehicleManager.currentUser instanceof Admin) {
 
             int adminChoice = 0;
-
+        
             // Admin menu
-
-            System.out.print("\n\n\n  ---- WELCOME " + VehicleManager.currentUser.getUserName() + " ----");
+            System.out.print("\n\n\n  ---- WELCOME " + VehicleManager.currentUser.getUserName().toUpperCase() + " ----");
             do {
-
                 System.out.print(
-                    "\n\n  ---- MAIN MENU ----" + "\n" +
+                    "\n\n  ---- ADMIN MAIN MENU ----" + "\n" +
                     "\n" +
                     "1 - View available vehicles" + "\n" +
                     "2 - Add a vehicle" + "\n" +
                     "3 - Update a vehicle" + "\n" +
-                    "3 - Remove a vehicle" + "\n" +
-                    "4 - View all current bookings" + "\n" +
-                    "5 - Bookings waiting approval" + "\n" + 
+                    "4 - Remove a vehicle" + "\n" +
+                    "5 - View all current bookings" + "\n" +
+                    "6 - Approve/Reject pending bookings" + "\n" +
                     "0 - Log out" + "\n" +
                     "\n" +
-                    "  - Enter your choice: "
+                    "Enter your choice: "
                 );
-                adminChoice = scanner.nextInt();
-                scanner.nextLine(); // clear buffer
-
-
+        
+                String adminChoiceInput = scanner.nextLine(); // Handle invalid input
+                if (adminChoiceInput.matches("\\d")) {
+                    adminChoice = Integer.parseInt(adminChoiceInput);
+                } 
+                else {
+                    System.out.println("\n  ! -- Invalid input. Please enter a valid number -- !");
+                    continue;
+                }
+        
                 switch (adminChoice) {
-
-                    case 1: 
-
+                    case 1:
                         printAvailableVehicles();
                         break;
 
                     case 2:
+                        System.out.println("\n\n  ---- ADD NEW VEHICLE ----");
+                        System.out.print("Enter vehicle type (Car, Van, Motorcycle): ");
+                        String type = scanner.nextLine().toLowerCase();
+                        if (type.equals("car")) {
+                            
+                            Car newCar = new Car();
 
-                        int VehicleChoice = 0;
+                            // prompt user for new car details and assign them
+                            newCar.requestCarDetails();
+                            addVehicle(newCar);
 
-                        System.out.print(
-                            "\n\n - Type of vehicle to add:" + "\n" +
-                            "    1. Car" + "\n" +
-                            "    2. Van" + "\n" +
-                            "    3. Motorcycle"
-                        );
-                        VehicleChoice = scanner.nextInt();
-                        scanner.nextLine(); // clear buffer
-
-                        String name, model, fuelType, make, color;
-                        boolean hasInsurance, isAvailable;
-                        int year, noSeats;
-                        double price;
-
-                        System.out.print("\n\n - name: ");
-                        name = scanner.nextLine();
-
-                        System.out.print("\n\n - model: ");
-                        model = scanner.nextLine();
-
-                        System.out.print("\n\n - fuel type: ");
-                        fuelType = scanner.nextLine();
-
-                        System.out.print("\n\n - make: ");
-                        make = scanner.nextLine();
-
-                        System.out.print("\n\n - color: ");
-                        color = scanner.nextLine();
-
-                        System.out.print("\n\n - Has insurance? (1 for yes, 0 for no): ");
-                        hasInsurance = scanner.nextBoolean();
-
-                        System.out.print("\n\n - Is it available? (1 for yes, 0 for no): ");
-                        isAvailable = scanner.nextBoolean();
-
-                        System.out.print("\n\n - model year: ");
-                        year = scanner.nextInt();
-                        
-                        System.out.print("\n\n - number of seats: ");
-                        noSeats = scanner.nextInt();
-
-                        System.out.print("\n\n - Price: ");
-                        price = scanner.nextDouble();
-
-                        
-
+                        } else {
+                            System.out.println("\n  ! -- Invalid vehicle type. Please try again. -- !");
+                        }
                         break;
+        
+                    case 3:
+                        System.out.println("\n\n  ---- UPDATE VEHICLE ----");
+                        // Provide vehicle update logic
+                        break;
+        
+                    case 4:
+                        System.out.println("\n\n  ---- REMOVE VEHICLE ----");
+                        // Provide vehicle removal logic
+                        break;
+        
+                    case 5:
+                        System.out.println("\n\n  ---- VIEW ALL BOOKINGS ----");
+                        // Show all bookings
+                        break;
+        
+                    case 6:
+                        System.out.println("\n\n  ---- APPROVE/REJECT BOOKINGS ----");
+                        // Approve or reject bookings
+                        break;
+        
+                    case 0:
+                        System.out.println("\n\n Logging out...");
+                        break;
+        
+                    default:
+                        System.out.println("\n  ! -- Invalid choice. Please select a valid menu option -- !");
                 }
-
-
+        
             } while (adminChoice != 0);
-
         }
+        
 
         
         if (VehicleManager.currentUser instanceof Customer) {
 
             int customerChoice = 0;
-
+        
             // Customer menu
-
             System.out.print("\n\n\n  ---- WELCOME " + VehicleManager.currentUser.getUserName() + " ----");
             do {
-
                 System.out.print(
-                    "\n\n  ---- MAIN MENU ----" + "\n" +
+                    "\n\n  ---- CUSTOMER MAIN MENU ----" + "\n" +
                     "\n" +
                     "1 - View available vehicles" + "\n" +
                     "2 - Book a vehicle" + "\n" +
@@ -714,38 +729,48 @@ public class VehicleManager {
                     "4 - View my bookings" + "\n" +
                     "0 - Log out" + "\n" +
                     "\n" +
-                    "  - Enter your choice: "
+                    "Enter your choice: "
                 );
-                customerChoice = scanner.nextInt();
-                scanner.nextLine(); // clear buffer
-
-
+        
+                String customerChoiceInput = scanner.nextLine(); // Handle invalid input
+                if (customerChoiceInput.matches("\\d")) {
+                    customerChoice = Integer.parseInt(customerChoiceInput);
+                } else {
+                    System.out.println("\n  ! -- Invalid input. Please enter a valid number. -- !");
+                    continue;
+                }
+        
                 switch (customerChoice) {
-
                     case 1:
-                    
                         printAvailableVehicles();
                         break;
-                
+        
                     case 2:
-                    
+                        System.out.println("\n\n  ---- BOOK A VEHICLE ----");
+                        // Provide booking logic
                         break;
-
+        
                     case 3:
-
+                        System.out.println("\n\n  ---- CANCEL A BOOKING ----");
+                        // Provide cancel booking logic
                         break;
-
+        
                     case 4:
-
+                        System.out.println("\n\n  ---- VIEW MY BOOKINGS ----");
+                        // Show customer bookings
                         break;
-
-
+        
+                    case 0:
+                        System.out.println("\n\n Logging out...");
+                        break;
+        
                     default:
-                        break;
+                        System.out.println("\n  ! -- Invalid choice. Please select a valid menu option. -- !");
                 }
-
+        
             } while (customerChoice != 0);
         }
+        
 
 
 
@@ -753,6 +778,8 @@ public class VehicleManager {
 
     public static void addVehicle(Vehicle newVehicle) {
         
+        String vehicleID = String.valueOf(VehicleManager.noVehicles + 1);
+        newVehicle.setVehicleID(vehicleID);
         VehicleManager.vehicles[VehicleManager.noVehicles] = newVehicle; 
     }
 
@@ -841,7 +868,6 @@ public class VehicleManager {
         Vehicle[] availableVehicles = getAvailableVehicles();
 
         int counter = 0;
-        boolean allNull = true;
 
         if (availableVehicles == null) {
             System.out.print("\n\n  ! -- There are no available vehicles at this time -- !");
