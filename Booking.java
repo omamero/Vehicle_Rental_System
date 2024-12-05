@@ -24,6 +24,14 @@ public class Booking extends Payment {
     }
 
     // Setters and Getters
+    public void setBookingDate(Date bookingDate) {
+        this.bookingDate = bookingDate;
+    }
+
+    public Date getBookingDate() {
+        return bookingDate;
+    }
+
     public void setFromToDate(Date fromDate, Date toDate) {
         this.fromDate = fromDate;
         this.toDate = toDate;
@@ -62,6 +70,7 @@ public class Booking extends Payment {
         }
     }
 
-
+    public void confirmBooking() {
+        System.out.println("Booking confirmed for vehicle: " + vehicle);
+    }
 }
-
