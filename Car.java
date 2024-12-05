@@ -49,18 +49,18 @@ public class Car extends Vehicle {
         LocalDate dateNow = LocalDate.now();
         
         // Ask for car name
-        System.out.print("\n\n - Enter car name: ");
+        System.out.print("\n - Enter car name: ");
         super.name = scanner.nextLine();
         
         // Ask for car model
-        System.out.print("\n\n - Enter car model: ");
+        System.out.print("\n - Enter car model: ");
         super.model = scanner.nextLine();
         
         // Ask for fuel type
         String[] validFuelTypes = {"Gasoline", "Diesel", "Electric", "Hybrid"};
         boolean validFuelType = false;
         do {
-            System.out.print("\n\n - Enter fuel type (Gasoline, Diesel, Electric, Hybrid): ");
+            System.out.print("\n - Enter fuel type (Gasoline, Diesel, Electric, Hybrid): ");
             super.fuelType = scanner.nextLine();
             
             // Check if input fuelType is valid
@@ -72,7 +72,7 @@ public class Car extends Vehicle {
             }
             
             if (!validFuelType) {
-                System.out.print("\n\n  ! -- Invalid fuel type. Please enter a valid fuel type (Gasoline, Diesel, Electric, Hybrid) -- !");
+                System.out.print("\n\n  ! -- Invalid fuel type. Please enter a valid fuel type (Gasoline, Diesel, Electric, Hybrid) -- !\n");
             }
         } while (!validFuelType);
         
@@ -82,7 +82,7 @@ public class Car extends Vehicle {
         boolean validYear = false;
 
         do {
-            System.out.print("\n\n - Enter car year: ");
+            System.out.print("\n - Enter car year: ");
             String yearInput = scanner.nextLine();
             
             if (yearInput.matches("^\\d{4}$")) {
@@ -95,13 +95,13 @@ public class Car extends Vehicle {
                     validYear = true;
                 }
                 else {
-                    System.out.print("\n\n  ! -- Invalid year. Please enter a year between 1900 and " + (dateNow.getYear()) + " -- !");
+                    System.out.print("\n\n  ! -- Invalid year. Please enter a year between 1900 and " + (dateNow.getYear()) + " -- !\n");
                     validYear = false;
                 }
             }
             else {
                 validYear = false;
-                System.out.print("\n\n  ! -- Invalid input. Please enter a correct number of year -- !");
+                System.out.print("\n\n  ! -- Invalid input. Please enter a correct number of year -- !\n");
             }
             
         } while (!validYear);
@@ -112,7 +112,7 @@ public class Car extends Vehicle {
         boolean validPrice = false;
         
         do {
-            System.out.print("\n\n - Enter car price: ");
+            System.out.print("\n - Enter car price: ");
             String priceInput = scanner.nextLine();
             
             if (priceInput.matches("^\\d+(\\.\\d{1,2})?$")) {
@@ -123,12 +123,12 @@ public class Car extends Vehicle {
                     validPrice = true;
                 } 
                 else {
-                    System.out.print("\n\n  ! -- Invalid price. Please enter a price greater than 0 -- !");
+                    System.out.print("\n\n  ! -- Invalid price. Please enter a price greater than 0 -- !\n");
                     validPrice = false;
                 }
             }
             else {
-                System.out.print("\n\n  ! -- Invalid input. Please enter a valid price -- !");
+                System.out.print("\n\n  ! -- Invalid input. Please enter a valid price -- !\n");
                 validPrice = false;
             }
             
@@ -139,7 +139,7 @@ public class Car extends Vehicle {
         int noSeats = 0;
         boolean validNoSeats = false;
         do {
-            System.out.print("\n\n - Enter the number of seats: ");
+            System.out.print("\n - Enter the number of seats: ");
             String seatsInput = scanner.nextLine();
             if (seatsInput.matches("\\d+")) { // Ensure it's a valid number
                 noSeats = Integer.parseInt(seatsInput);
@@ -147,22 +147,22 @@ public class Car extends Vehicle {
                     super.noSeats = noSeats;
                     validNoSeats = true;
                 } else {
-                    System.out.print("\n\n  ! -- Invalid number of seats. Please enter a number between 1 and 7 -- !");
+                    System.out.print("\n\n  ! -- Invalid number of seats. Please enter a number between 1 and 7 -- !\n");
                     validNoSeats = false;
                 }
             } else {
-                System.out.print("\n\n  ! -- Invalid input. Please enter a valid number for seats -- !");
+                System.out.print("\n\n  ! -- Invalid input. Please enter a valid number for seats -- !\n");
                 validNoSeats = false;
             }
         } while (!validNoSeats);
         
         
         // Ask for car make
-        System.out.print("\n\n - Enter car make: ");
+        System.out.print("\n - Enter car make: ");
         super.make = scanner.nextLine();
         
         // Ask for car color
-        System.out.print("\n\n - Enter car color: ");
+        System.out.print("\n - Enter car color: ");
         super.color = scanner.nextLine();
 
 
@@ -170,7 +170,7 @@ public class Car extends Vehicle {
         String[] validTransmissions = {"Automatic", "Manual"};
         boolean validTransmission = false;
         do {
-            System.out.print("\n\n - Enter transmission type (Automatic, Manual): ");
+            System.out.print("\n - Enter transmission type (Automatic, Manual): ");
             this.transmissionType = scanner.nextLine();
             
             for (String trans : validTransmissions) {
@@ -181,14 +181,14 @@ public class Car extends Vehicle {
             }
             
             if (!validTransmission) {
-                System.out.print("\n\n  ! -- Invalid transmission type. Please enter a valid transmission type (Automatic, Manual) -- !");
+                System.out.print("\n\n  ! -- Invalid transmission type. Please enter a valid transmission type (Automatic, Manual) -- !\n");
             }
         } while (!validTransmission);
 
         // Ask for car insurance status
         boolean validInsurance = false;
         do {
-            System.out.print("\n\n - Does the car have insurance? (yes/no): ");
+            System.out.print("\n - Does the car have insurance? (yes/no): ");
             String insuranceInput = scanner.nextLine();
             if (insuranceInput.equalsIgnoreCase("yes")) {
                 super.hasInsurance = true;
@@ -197,14 +197,14 @@ public class Car extends Vehicle {
                 super.hasInsurance = false;
                 validInsurance = true;
             } else {
-                System.out.print("\n\n  ! -- Invalid input. Please enter 'yes' or 'no' for insurance -- !");
+                System.out.print("\n\n  ! -- Invalid input. Please enter 'yes' or 'no' for insurance -- !\n");
             }
         } while (!validInsurance);
 
         // Ask for car availability status
         boolean validAvailability = false;
         do {
-            System.out.print("\n\n - Is the car available? (yes/no): ");
+            System.out.print("\n - Is the car available? (yes/no): ");
             String availabilityInput = scanner.nextLine();
             if (availabilityInput.equalsIgnoreCase("yes")) {
                 super.isAvailable = true;
@@ -213,23 +213,38 @@ public class Car extends Vehicle {
                 super.isAvailable = false;
                 validAvailability = true;
             } else {
-                System.out.println("  ! -- Invalid input. Please enter 'yes' or 'no' for availability -- !");
+                System.out.println("  ! -- Invalid input. Please enter 'yes' or 'no' for availability -- !\n");
             }
         } while (!validAvailability);
 
         // Display the entered details
         System.out.println("\n - Car details entered:");
-        System.out.println("Make: " + super.make);
-        System.out.println("Model: " + super.model);
-        System.out.println("Year: " + super.year);
-        System.out.println("Color: " + super.color);
-        System.out.println("Price: $" + super.price);
-        System.out.println("Name: " + super.name);
-        System.out.println("Fuel Type: " + super.fuelType);
-        System.out.println("Seats: " + super.noSeats);
-        System.out.println("Transmission: " + this.transmissionType);
-        System.out.println("Insurance: " + (super.hasInsurance ? "Yes" : "No"));
-        System.out.println("Available: " + (super.isAvailable ? "Yes" : "No"));
+        System.out.println("    - Make: " + super.make);
+        System.out.println("    - Model: " + super.model);
+        System.out.println("    - Year: " + super.year);
+        System.out.println("    - Color: " + super.color);
+        System.out.println("    - Price: $" + super.price);
+        System.out.println("    - Name: " + super.name);
+        System.out.println("    - Fuel Type: " + super.fuelType);
+        System.out.println("    - Seats: " + super.noSeats);
+        System.out.println("    - Transmission: " + this.transmissionType);
+        System.out.println("    - Insurance: " + (super.hasInsurance ? "Yes" : "No"));
+        System.out.println("    - Available: " + (super.isAvailable ? "Yes" : "No"));
+
+        System.out.print(
+            "\n - Car details entered:" + "\n" +
+            "\n" + "    - Make: " + super.make  + "\n" +
+            "    - Model: " + super.model + "\n" +
+            "    - Year: " + super.year + "\n" +
+            "    -Color : " + super.color  + "\n" +
+            "    - Price: $" + super.price  + "\n" +
+            "    - Name: " + super.name  + "\n" +
+            "    - Fuel Type: " + super.fuelType  + "\n" +
+            "    - Seats: " + super.noSeats  + "\n" +
+            "    - Transmission: " + this.transmissionType  + "\n" +
+            "    - Insurance: " + (super.hasInsurance ? "Yes" : "No") + "\n" +
+            "    - Available: " + (super.hasInsurance ? "Yes" : "No")
+        );
 
     }
 

@@ -644,7 +644,7 @@ public class VehicleManager {
                     "4 - Remove a vehicle" + "\n" +
                     "5 - View all current bookings" + "\n" +
                     "6 - Approve/Reject pending bookings" + "\n" +
-                    "0 - Log out" + "\n" +
+                    "7 - Log out" + "\n" +
                     "\n" +
                     "Enter your choice: "
                 );
@@ -657,6 +657,7 @@ public class VehicleManager {
                     System.out.println("\n  ! -- Invalid input. Please enter a valid number -- !");
                     continue;
                 }
+
         
                 switch (adminChoice) {
                     case 1:
@@ -664,20 +665,33 @@ public class VehicleManager {
                         break;
 
                     case 2:
-                        System.out.println("\n\n  ---- ADD NEW VEHICLE ----");
-                        System.out.print("Enter vehicle type (Car, Van, Motorcycle): ");
-                        String type = scanner.nextLine().toLowerCase();
-                        if (type.equals("car")) {
-                            
-                            Car newCar = new Car();
+                        System.out.print("\n\n  ---- ADD NEW VEHICLE ----");
 
-                            // prompt user for new car details and assign them
-                            newCar.requestCarDetails();
-                            addVehicle(newCar);
+                        boolean validType = true;
+                        do {
+                            System.out.print("\n\n - Enter vehicle type (Car, Van, Motorcycle): ");
+                            String type = scanner.nextLine().toLowerCase();
+    
+                            if (type.equals("car")) {
+                                
+                                Car newCar = new Car();
 
-                        } else {
-                            System.out.println("\n  ! -- Invalid vehicle type. Please try again. -- !");
-                        }
+                                // prompt user for new car details and assign them
+                                newCar.requestCarDetails();
+                                addVehicle(newCar);
+                                break;
+                            }
+                            else if (type.equals("van")) {
+
+                            }
+                            else if (type.equals("motorcycle")) {
+
+                            }
+                            else {
+                                System.out.print("\n\n  ! -- Invalid vehicle type. Please try again. -- !");
+                                validType = false;
+                            }
+                        } while (!validType);
                         break;
         
                     case 3:
@@ -700,7 +714,7 @@ public class VehicleManager {
                         // Approve or reject bookings
                         break;
         
-                    case 0:
+                    case 7:
                         System.out.println("\n\n Logging out...");
                         break;
         
@@ -708,7 +722,7 @@ public class VehicleManager {
                         System.out.println("\n  ! -- Invalid choice. Please select a valid menu option -- !");
                 }
         
-            } while (adminChoice != 0);
+            } while (adminChoice != 7);
         }
         
 
