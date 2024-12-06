@@ -1,6 +1,7 @@
 package Vehicle_Rental_System;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class VehicleManager {
@@ -11,6 +12,7 @@ public class VehicleManager {
     //Top-Level Domain
     private static final String TLD = "com";
     
+    private static ArrayList<Booking> bookings = new ArrayList<Booking>();
     private static Vehicle[] vehicles = new Vehicle[MAX_VEHICLES];
     private static ArrayList<User> users = new ArrayList<User>();
     private static User currentUser;
@@ -27,28 +29,28 @@ public class VehicleManager {
 
     public static void main(String[] args) {
 
-                //------------------------------------------------------------------------------- FOR TEST PURPOSES
-                User admin1 = new Admin();
-                admin1.registerUser("Ali", "Mohammed", "Hasan", "0559645334", "ali@gmail.com", "Ali11!!", "1", 19);
-                VehicleManager.users.add(admin1);
-        
-                Vehicle car1 = new Car(
-                    "1",
-                    "2022 Toyota Camry",
-                    "Camry",
-                    "Gasoline",
-                    2022,
-                    200,
-                    5,
-                    "Toyota",
-                    "Silver",
-                    "Automatic",
-                    true,
-                    true
-                );
-                VehicleManager.vehicles[Integer.parseInt(car1.getVehicleID())] = car1;
+        //----------------------------- FOR TEST PURPOSES -----------------------------//
+        User admin1 = new Admin();
+        admin1.registerUser("Ali", "Mohammed", "Hasan", "0559645334", "ali@gmail.com", "Ali11!!", "1", 19);
+        VehicleManager.users.add(admin1);
 
-                //------------------------------------------------------------------------------- FOR TEST PURPOSES
+        Vehicle car1 = new Car(
+            "1",
+            "2022 Toyota Camry",
+            "Camry",
+            "Gasoline",
+            2022,
+            200,
+            5,
+            "Toyota",
+            "Silver",
+            "Automatic",
+            true,
+            true
+        );
+        VehicleManager.vehicles[Integer.parseInt(car1.getVehicleID())] = car1;
+
+        //----------------------------- FOR TEST PURPOSES -----------------------------//
         
         System.out.println(
             "\n\n  ----  WELCOME TO VEHICLE RENTAL SYSTEM  ----  \n\n"
@@ -102,7 +104,7 @@ public class VehicleManager {
                                     // admin registeration
                                     User newAdmin = new Admin();
 
-                                    String firstName = null, secondName, lastName, phoneNumber, email, newPassword, cnofirmPassword;
+                                    String firstName = null, secondName, lastName, phoneNumber, email, newPassword, cnofirmPassword, adminID = "";
                                     int age;
                                     boolean isValid = false;
 
@@ -240,40 +242,52 @@ public class VehicleManager {
 
                                     } while (!isValid);
 
-                                    // check if user available in users arrayList. If not, user will be registered and returned to ADMIN LOGIN menu
-                                    boolean registerValid = true;
-                                    String adminID = "0";
-
-                                    if (VehicleManager.users != null) {
-                                        for (int i = 0; i < VehicleManager.users.size(); i++) {
-                                            
-                                            if (VehicleManager.users.get(i) instanceof Admin) {
-
-                                                // phone number stored before?
-                                                if (VehicleManager.users.get(i).getPhoneNumber() == phoneNumber) {
-                                                    registerValid = false;
-                                                    System.out.print("\n\n  ! -- Phone number you entered appears to be in our system. Please try registering again with another phone number or login -- !");
-                                                    break;
-                                                }
-                                                // email stored before?
-                                                else if (VehicleManager.users.get(i).getEmail() == email) {
-                                                    registerValid = false;
-                                                    System.out.print("\n\n  ! -- Email address you entered appears to be in our system. Please try registering again with another email address or login -- !");
-                                                    break;
-                                                } 
-                                            }
-                                            
-
-                                            adminID = String.valueOf(VehicleManager.users.size() - 1);
-                                        }
+                                    boolean isAuthenticated = false;
+                                    // authentication verification
+                                               scanner.nextLine();
+                                    System.out.print("\n\n - Authentication code: ");
+                                    
+                                    isAuthenticated = ((Admin) newAdmin).isAuthorized(scanner.nextLine());
+                                    
+                                    if (!isAuthenticated) {
+                                        System.out.print("\n\n  ! -- Sorry, you are not authorized to log in -- !");
                                     }
+                                    else {
+                                        
+                                        // check if user available in users arrayList. If not, user will be registered and returned to ADMIN LOGIN menu
+                                        boolean registerValid = true;
 
-                                    if (registerValid) {
+                                        if (VehicleManager.users != null) {
+                                            for (int i = 0; i < VehicleManager.users.size(); i++) {
+                                                
+                                                if (VehicleManager.users.get(i) instanceof Admin) {
 
-                                        newAdmin.registerUser(firstName, secondName, lastName, phoneNumber, email, newPassword, adminID, age);
-                                        VehicleManager.users.add(newAdmin);
+                                                    // phone number stored before?
+                                                    if (VehicleManager.users.get(i).getPhoneNumber() == phoneNumber) {
+                                                        registerValid = false;
+                                                        System.out.print("\n\n  ! -- Phone number you entered appears to be in our system. Please try registering again with another phone number or login -- !");
+                                                        break;
+                                                    }
+                                                    // email stored before?
+                                                    else if (VehicleManager.users.get(i).getEmail() == email) {
+                                                        registerValid = false;
+                                                        System.out.print("\n\n  ! -- Email address you entered appears to be in our system. Please try registering again with another email address or login -- !");
+                                                        break;
+                                                    } 
+                                                }
+                                                
 
-                                        System.out.print("\n\n ---- You have successfully registered. Now, you can login to enter to your account ----");
+                                                adminID = String.valueOf(VehicleManager.users.size() - 1);
+                                            }
+                                        }
+
+                                        if (registerValid) {
+
+                                            newAdmin.registerUser(firstName, secondName, lastName, phoneNumber, email, newPassword, adminID, age);
+                                            VehicleManager.users.add(newAdmin);
+
+                                            System.out.print("\n\n ---- You have successfully registered. Now, you can login to enter to your account ----");
+                                        }                                        
                                     }
 
                                     break;
@@ -300,35 +314,46 @@ public class VehicleManager {
                                     String adminPassword = "";
                                     System.out.print("\n\n - password: ");
                                     adminPassword = scanner.nextLine();
-                                
-                                    userFound = false;
 
-                                    User adminUser = null;
-                                    for (User user: VehicleManager.users) {
-
-                                        if (user instanceof Admin) {
-                                            
-                                            // check email
-                                            if (user.getEmail().equals(adminEmail)) {
-                                                adminUser = user;
-                                                userFound = true;
-                                                break;
-                                            }
-                                        }
-                                    }
-
-                                    if (userFound) {
-
-                                        // check password
-                                        if (adminUser.getPassword().equals(adminPassword)) {
-                                            VehicleManager.setCurrentUser(adminUser);
-                                        }
-                                        else {
-                                            System.out.print("\n\n  ! -- Password is incorrect -- !");
-                                        }                                        
+                                    isAuthenticated = false;
+                                    System.out.print("\n\n - Authentication code: ");
+                                    
+                                    isAuthenticated = Admin.isAuthorized(scanner.nextLine());
+                                    
+                                    if (!isAuthenticated) {
+                                        System.out.print("\n\n  ! -- Sorry, you are not authorized to log in -- !");
                                     }
                                     else {
-                                        System.out.print("\n\n  ! -- Email is not available in our system -- !");
+
+                                        userFound = false;
+
+                                        User adminUser = null;
+                                        for (User user: VehicleManager.users) {
+    
+                                            if (user instanceof Admin) {
+                                                
+                                                // check email
+                                                if (user.getEmail().equals(adminEmail)) {
+                                                    adminUser = user;
+                                                    userFound = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+    
+                                        if (userFound) {
+    
+                                            // check password
+                                            if (adminUser.getPassword().equals(adminPassword)) {
+                                                VehicleManager.setCurrentUser(adminUser);
+                                            }
+                                            else {
+                                                System.out.print("\n\n  ! -- Password is incorrect -- !");
+                                            }                                        
+                                        }
+                                        else {
+                                            System.out.print("\n\n  ! -- Email is not available in our system -- !");
+                                        }
                                     }
                                 
                                     break;
@@ -730,63 +755,7 @@ public class VehicleManager {
         if (VehicleManager.currentUser instanceof Customer) {
 
             int customerChoice = 0;
-        
-            // Customer menu
-            System.out.print("\n\n\n  ---- WELCOME " + VehicleManager.currentUser.getUserName() + " ----");
-            do {
-                System.out.print(
-                    "\n\n  ---- CUSTOMER MAIN MENU ----" + "\n" +
-                    "\n" +
-                    "1 - View available vehicles" + "\n" +
-                    "2 - Book a vehicle" + "\n" +
-                    "3 - Cancel a booking" + "\n" +
-                    "4 - View my bookings" + "\n" +
-                    "0 - Log out" + "\n" +
-                    "\n" +
-                    "Enter your choice: "
-                );
-        
-                String customerChoiceInput = scanner.nextLine(); // Handle invalid input
-                if (customerChoiceInput.matches("\\d")) {
-                    customerChoice = Integer.parseInt(customerChoiceInput);
-                } else {
-                    System.out.println("\n  ! -- Invalid input. Please enter a valid number. -- !");
-                    continue;
-                }
-        
-                switch (customerChoice) {
-                    case 1:
-                        printAvailableVehicles();
-                        break;
-        
-                    case 2:
-                        System.out.println("\n\n  ---- BOOK A VEHICLE ----");
-                        // Provide booking logic
-                        break;
-        
-                    case 3:
-                        System.out.println("\n\n  ---- CANCEL A BOOKING ----");
-                        // Provide cancel booking logic
-                        break;
-        
-                    case 4:
-                        System.out.println("\n\n  ---- VIEW MY BOOKINGS ----");
-                        // Show customer bookings
-                        break;
-        
-                    case 0:
-                        System.out.println("\n\n Logging out...");
-                        break;
-        
-                    default:
-                        System.out.println("\n  ! -- Invalid choice. Please select a valid menu option. -- !");
-                }
-        
-            } while (customerChoice != 0);
         }
-        
-
-
 
     }
 
@@ -971,6 +940,130 @@ public class VehicleManager {
         }
 
     }
+    
+    public static void printAvailableCars() {
+
+        Vehicle[] availableVehicles = getAvailableVehicles();
+
+        int counter = 0;
+
+        if (availableVehicles == null) {
+            System.out.print("\n\n  ! -- There are no available vehicles at this time -- !");
+            return;
+        }
+
+        // cars list
+        System.out.print("\n\n  ---- Available Cars ----");
+        for (int i = 0; i < availableVehicles.length; i++) {
+
+            if (availableVehicles[i] instanceof Car) {
+
+                Car car = (Car) availableVehicles[i];
+
+                System.out.print(
+                    "\n\n - " + (counter + 1) + ". " + (car.name) + "\n" +
+                    "    - Vehicle ID: " + car.getVehicleID() + "\n" +
+                    "    - Make: " + car.getMake() + "\n" +
+                    "    - Model: " + car.model + "\n" +
+                    "    - Model Year: " + car.getYear() + "\n" +
+                    "    - Transmission Type: " + car.getTransmissionType() + "\n" +
+                    "    - Fuel Type: " + car.fuelType + "\n" +
+                    "    - Color: " + car.getColor() + "\n" +
+                    "    - Number of Seats: " + car.getNoSeats() + "\n" +
+                    "    - Has insurance: " + (car.hasInsurance ? "Yes": "No") + "\n" +
+                    "    - Price: " + car.getPrice()
+                );
+
+                counter++;
+            }
+        }
+    }
+    
+    
+    public static void printAvailabeVans() {
+
+        Vehicle[] availableVehicles = getAvailableVehicles();
+
+        int counter = 0;
+
+        if (availableVehicles == null) {
+            System.out.print("\n\n  ! -- There are no available vehicles at this time -- !");
+            return;
+        }
+
+        counter = 0;
+        // vans list
+        System.out.print("\n\n  ---- Available Vans ----");
+        for (int i = 0; i < availableVehicles.length; i++) {
+
+            if (availableVehicles[i] instanceof Van) {
+
+                Van van = (Van) availableVehicles[i];
+                
+                System.out.print(
+                    "\n\n - " + (counter + 1) + ". " + (van.name) + "\n" +
+                    "    - Vehicle ID: " + van.getVehicleID() + "\n" +
+                    "    - Make: " + van.getMake() + "\n" +
+                    "    - Model: " + van.model + "\n" +
+                    "    - Model Year: " + van.getYear() + "\n" +
+                    "    - Fuel Type: " + van.fuelType + "\n" +
+                    "    - Color: " + van.getColor() + "\n" +
+                    "    - Number of Seats: " + van.getNoSeats() + "\n" +
+                    "    - Cargo space (cubic feet): " + van.getCargoSpace() + "\n" +
+                    "    - Maximum Load (Kg): " + van.getMaxLoad() + "\n" +
+                    "    - Has insurance: " + (van.hasInsurance ? "Yes": "No") + "\n" +
+                    "    - Price: " + van.getPrice()
+                );
+
+                counter++;
+            }
+        }
+
+    }
+    
+    public static void printAvailableMotorCycles() {
+
+        Vehicle[] availableVehicles = getAvailableVehicles();
+
+        int counter = 0;
+
+        if (availableVehicles == null) {
+            System.out.print("\n\n  ! -- There are no available vehicles at this time -- !");
+            return;
+        }
+
+
+        counter = 0;
+        // motorcycles list
+        System.out.print("\n\n  ---- Available Motorcycles ----");
+        for (int i = 0; i < availableVehicles.length; i++) {
+
+            if (availableVehicles[i] instanceof MotorCycle) {
+
+                MotorCycle motorCycle = (MotorCycle) availableVehicles[i];
+                
+                System.out.print(
+                    "\n\n - " + (counter + 1) + ". " + (motorCycle.name) + "\n" +
+                    "    - Vehicle ID: " + motorCycle.getVehicleID() + "\n" +
+                    "    - Make: " + motorCycle.getMake() + "\n" +
+                    "    - Model: " + motorCycle.model + "\n" +
+                    "    - Model Year: " + motorCycle.getYear() + "\n" +
+                    "    - Type of Handle Bar: " + motorCycle.getHandleBar() + "\n" +
+                    "    - Licence Required: " + (motorCycle.isLicenseRequired() ? "Yes": "No") + "\n" +
+                    "    - Fuel Type: " + motorCycle.fuelType + "\n" +
+                    "    - Color: " + motorCycle.getColor() + "\n" +
+                    "    - Number of Seats: " + motorCycle.getNoSeats() + "\n" +
+                    "    - Has insurance: " + (motorCycle.hasInsurance ? "Yes": "No") + "\n" +
+                    "    - Price: " + motorCycle.getPrice()
+                );
+
+                counter++;
+            }
+        }
+
+    }
+    
+    
     // if not found: returns -1
     public static int searchVehicleIndex(Vehicle vehicle) {
 
@@ -1100,8 +1193,38 @@ public class VehicleManager {
         return VehicleManager.currentUser;
     }
 
+    public static Vehicle getVehicleByID(String id) {
 
+        Vehicle[] availableVehicles = getAvailableVehicles();
 
+        if (availableVehicles == null) {
+            return null;
+        }
+
+        for (Vehicle vehicle: availableVehicles) {
+            
+            if (vehicle.getVehicleID().equals(id)) {
+                return vehicle;
+            }
+        }
+
+        return null;
+
+        
+
+    }
+
+    public static boolean bookVehicle(Vehicle vehicle, String startDate, String endDate, User currentUser) {
+
+        // Check if vehicle is available
+        if (!vehicle.isAvailable) {
+            System.out.print("\n\n  ! -- The vehicle is unavailable -- !");
+            return false;
+        }
+
+        return true;
+
+    }
 
 }
 
