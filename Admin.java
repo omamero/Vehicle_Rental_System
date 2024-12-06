@@ -3,7 +3,7 @@ package Vehicle_Rental_System;
 public class Admin extends User {
     
 
-    private static final String AUTHORIZE_CODE = "@3#dg$%32FR5#Dhj524^#$%l;jdftgq";
+    private static final String AUTHORIZE_CODE = "authorize12!@";
 
     private VehicleManager vehicleManager;
 
@@ -12,9 +12,9 @@ public class Admin extends User {
 
     }
 
-    public boolean isAuthorized(String authorizeCode) {
+    public static boolean isAuthorized(String authorizeCode) {
 
-        if (authorizeCode == Admin.AUTHORIZE_CODE) {
+        if (authorizeCode.equals(Admin.AUTHORIZE_CODE)) {
             return true;
         }
 

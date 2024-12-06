@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Booking extends Payment {
     // Attributes
-    private VehicleManager vehicleManager;
+
     private Vehicle vehicle;
     private Date bookingDate;
     private Date fromDate;

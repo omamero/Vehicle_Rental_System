@@ -5,8 +5,8 @@ public class Customer extends User {
     private static final int MAX_BOOKINGS = 3;
 
     // Attributes
-    private Booking[] bookings = new Booking[MAX_BOOKINGS];
-    private int noVehiclesRented;
+    private Booking[] customerBookings = new Booking[MAX_BOOKINGS];
+    protected int noVehiclesRented;
     private String licenseType;
     private boolean legalAge;
     private boolean hasLicense;
