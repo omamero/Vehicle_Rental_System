@@ -1006,37 +1006,29 @@ public class VehicleManager {
                     break;
         
                     case 3:
-                        // System.out.println("\n\n  ---- CANCEL A BOOKING ----");
+                         System.out.println("\n\n  ---- CANCEL A BOOKING ----");
         
-                        // // Show the list of customer bookings to cancel
-                        // System.out.println("Fetching your bookings...");
-                        // List<Booking> bookings = VehicleManager.getCustomerBookings((Customer) VehicleManager.currentUser);
-                        // if (bookings.isEmpty()) {
-                        //     System.out.println("No bookings found.");
-                        // } else {
-                        //     // List all bookings with options to cancel
-                        //     for (int i = 0; i < bookings.size(); i++) {
-                        //         System.out.println((i + 1) + ". " + bookings.get(i).toString());
-                        //     }
-                        //     System.out.print("Enter the booking number you want to cancel: ");
-                        //     String cancelChoiceInput = scanner.nextLine();
-                        //     if (cancelChoiceInput.matches("\\d")) {
-                        //         int cancelChoice = Integer.parseInt(cancelChoiceInput);
-                        //         if (cancelChoice > 0 && cancelChoice <= bookings.size()) {
-                        //             Booking bookingToCancel = bookings.get(cancelChoice - 1);
-                        //             if (cancelBooking(bookingToCancel)) {
-                        //                 System.out.println("Booking canceled successfully.");
-                        //             } else {
-                        //                 System.out.println("Failed to cancel the booking. Try again.");
-                        //             }
-                        //         } else {
-                        //             System.out.println("Invalid choice.");
-                        //         }
-                        //     } else {
-                        //         System.out.println("Invalid input.");
-                        //     }
-                        // }
-                        // break;
+                       // Show the list of customer bookings to cancel
+                          System.out.println("Enter the vehicle ID to cancel your booking:");
+                            String vehicleIdToCancel = scanner.nextLine();
+                            boolean bookingFound = false;
+                        
+                            // Search for the booking in the bookings ArrayList
+                            for (Booking booking : bookings) {
+                            if (booking.getVehicle().getId().equals(vehicleIdToCancel) && booking.getUser().equals(currentUser)) {
+                                bookings.remove(booking); // Remove the booking
+                                booking.getVehicle().setAvailable(true); // Mark vehicle as available
+                                System.out.println("Booking for vehicle ID " + vehicleIdToCancel + " has been successfully canceled.");
+                                bookingFound = true;
+                                break; // Exit the loop after canceling the booking
+                                }
+                            }
+                        
+                            if (!bookingFound) {
+                                System.out.println("No booking found for the given vehicle ID.");
+                            }
+                            break;
+        
         
                     case 4:
                         // System.out.println("\n\n  ---- VIEW MY BOOKINGS ----");
