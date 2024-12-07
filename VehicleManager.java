@@ -1074,23 +1074,31 @@ public class VehicleManager {
                         // }
                         // break;
         
-                    case 4:
-                        // System.out.println("\n\n  ---- VIEW MY BOOKINGS ----");
-        
-                        // Show the list of customer bookings
-                        System.out.println("Fetching your bookings...");
-                        
-                        ArrayList<Booking> myBookings = ((Customer) VehicleManager.currentUser).getBookings();
-
-                        if (myBookings.isEmpty()) {
-
-                            System.out.println("\n\n  ! -- No bookings found.");
-                        } else {
-                            for (Booking booking : myBookings) {
-                                System.out.println(booking.toString());
-                            }
+                    
+                         case 4: // Display All Bookings
+                    System.out.println("Your Bookings:");
+                    boolean hasBookings = false;
+                
+                    // Loop through bookings to display those associated with the current user
+                    for (Booking booking : bookings) {
+                        if (booking.getUser().equals(currentUser)) {
+                            hasBookings = true;
+                            System.out.println("Vehicle ID: " + booking.getVehicle().getId());
+                            System.out.println("Booking Date: " + booking.getBookingDate());
+                            System.out.println("From: " + booking.getFromDate() + " To: " + booking.getToDate());
+                            System.out.println("Rental Period: " + booking.getRentPeriod() + " days");
+                            System.out.println("-----------------------------------");
                         }
-                        break;
+                    }
+                
+                    if (!hasBookings) {
+                        System.out.println("You have no active bookings.");
+                    }
+                    break;
+                    if (!hasBookings) {
+                        System.out.println("You have no active bookings.");
+                    }
+                    break;
         
                     case 0:
                         System.out.println("\n\n Logging out...");
