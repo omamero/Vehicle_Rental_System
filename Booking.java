@@ -1,64 +1,64 @@
 package Vehicle_Rental_System;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Booking extends Payment {
     // Attributes
-
     private Vehicle vehicle;
-    private Date bookingDate;
-    private Date fromDate;
-    private Date toDate;
-    private int rentPeriodHr;
+    private LocalDate bookingDate;
+    private LocalDate fromDate;
+    private LocalDate toDate;
+    private int rentPeriodDays; 
     public boolean isBookingApproved;
 
     // Constructor
-    public Booking(Vehicle vehicle, Date bookingDate, Date fromDate, Date toDate, double totalAmount, String currency, Date paymentDate) {
+    public Booking(Vehicle vehicle, LocalDate bookingDate, LocalDate fromDate, LocalDate toDate, double totalAmount, String currency, LocalDate paymentDate) {
         super(totalAmount, currency, paymentDate); // Call the Payment constructor
         this.vehicle = vehicle;
         this.bookingDate = bookingDate;
         this.fromDate = fromDate;
         this.toDate = toDate;
-        this.rentPeriodHr = 0;
+        this.rentPeriodDays = 0; 
         this.isBookingApproved = false;
     }
 
     // Setters and Getters
-    public void setBookingDate(Date bookingDate) {
+    public void setBookingDate(LocalDate bookingDate) {
         this.bookingDate = bookingDate;
     }
 
-    public Date getBookingDate() {
+    public LocalDate getBookingDate() {
         return bookingDate;
     }
 
-    public void setFromToDate(Date fromDate, Date toDate) {
+    public void setFromToDate(LocalDate fromDate, LocalDate toDate) {
         this.fromDate = fromDate;
         this.toDate = toDate;
     }
 
-    public Date getFromDate() {
+    public LocalDate getFromDate() {
         return fromDate;
     }
 
-    public Date getToDate() {
+    public LocalDate getToDate() {
         return toDate;
     }
 
-    public void setRentPeriod(double hours) {
-        this.rentPeriodHr = (int) hours;
+    public void setRentPeriod(int days) {
+        this.rentPeriodDays = days;
     }
 
-    public double getRentPeriod() {
-        return rentPeriodHr;
+    public int getRentPeriod() {
+        return rentPeriodDays;
     }
 
     // Business Logic
-    public void createBooking(Vehicle vehicle, Date bookingDate, Date fromDate, Date toDate) {
+    public void createBooking(Vehicle vehicle, LocalDate bookingDate, LocalDate fromDate, LocalDate toDate) {
         this.vehicle = vehicle;
         this.bookingDate = bookingDate;
         this.fromDate = fromDate;
         this.toDate = toDate;
+        calculateRentPeriod();  // Calculate the rent period manually
     }
 
     public void cancelBooking(Vehicle vehicle) {
@@ -72,5 +72,14 @@ public class Booking extends Payment {
 
     public void confirmBooking() {
         System.out.println("Booking confirmed for vehicle: " + vehicle);
+    }
+
+    // Manual calculation of the rent period in days
+    private void calculateRentPeriod() {
+        if (fromDate != null && toDate != null) {
+            
+            // Manually calculate the rent period in days by subtracting dates
+            rentPeriodDays = (int) (toDate.toEpochDay() - fromDate.toEpochDay());
+        }
     }
 }

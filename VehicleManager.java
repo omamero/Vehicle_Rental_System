@@ -3,6 +3,7 @@ package Vehicle_Rental_System;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.time.LocalDate;
 
 public class VehicleManager {
 
@@ -11,7 +12,9 @@ public class VehicleManager {
     
     //Top-Level Domain
     private static final String TLD = "com";
-    
+    private static final String CURRENCY = "Saudi Riyal";
+
+    private static LocalDate dateNow = LocalDate.now();
     private static ArrayList<Booking> bookings = new ArrayList<Booking>();
     private static Vehicle[] vehicles = new Vehicle[MAX_VEHICLES];
     private static ArrayList<User> users = new ArrayList<User>();
@@ -34,6 +37,10 @@ public class VehicleManager {
         admin1.registerUser("Ali", "Mohammed", "Hasan", "0559645334", "ali@gmail.com", "Ali11!!", "1", 19);
         VehicleManager.users.add(admin1);
 
+        User customer1 = new Customer();
+        customer1.registerUser("Mohammed", "Ahmed", "Hasan", "0596884732", "moh@gmail.com", "Moham12!@", "1", 30);
+        VehicleManager.users.add(customer1);
+
         Vehicle car1 = new Car(
             "1",
             "2022 Toyota Camry",
@@ -48,7 +55,10 @@ public class VehicleManager {
             true,
             true
         );
-        VehicleManager.vehicles[Integer.parseInt(car1.getVehicleID())] = car1;
+        VehicleManager.vehicles[Integer.parseInt(car1.getVehicleID()) - 1] = car1;
+
+
+        
 
         //----------------------------- FOR TEST PURPOSES -----------------------------//
         
@@ -105,7 +115,7 @@ public class VehicleManager {
                                     User newAdmin = new Admin();
 
                                     String firstName = null, secondName, lastName, phoneNumber, email, newPassword, cnofirmPassword, adminID = "";
-                                    int age;
+                                    int age = 0;
                                     boolean isValid = false;
 
                                     // first name
@@ -228,23 +238,31 @@ public class VehicleManager {
 
                                     // age
                                     do {
+                                        String ageToCheck;
+                                        boolean hasLetter = false;
 
                                         System.out.print("\n\n - Age: ");
-                                        age = scanner.nextInt();
-                                        
-                                        if (age > 18 && age < 65) {
-                                            isValid = true;
-                                        }
-                                        else {
-                                            System.out.print("\n\n  ! -- Sorry, age must be between 18 and 65 to register -- !");
-                                            isValid = false;
+                                        ageToCheck = scanner.nextLine();
+                                        for (char digit: ageToCheck.toCharArray()) {
+                                            
+                                            if (!Character.isDigit(digit)) {
+                                                hasLetter = true;
+                                                break;
+                                            }
                                         }
 
+                                        if (hasLetter) {
+                                            isValid = false;
+                                            System.out.print("\n\n  ! -- age must be digits only with no space -- !");
+                                        }
+                                        else {
+                                            isValid = true;
+                                            age = Integer.parseInt(ageToCheck);
+                                        }
                                     } while (!isValid);
 
                                     boolean isAuthenticated = false;
                                     // authentication verification
-                                               scanner.nextLine();
                                     System.out.print("\n\n - Authentication code: ");
                                     
                                     isAuthenticated = ((Admin) newAdmin).isAuthorized(scanner.nextLine());
@@ -396,7 +414,7 @@ public class VehicleManager {
                                 User newCustomer = new Customer();
 
                                 String firstName, secondName, lastName, phoneNumber, email, newPassword, cnofirmPassword;
-                                int age;
+                                int age = 0;
                                 boolean isValid = false;
 
                                 // first name
@@ -519,18 +537,27 @@ public class VehicleManager {
 
                                 // age
                                 do {
+                                    String ageToCheck;
+                                    boolean hasLetter = false;
 
                                     System.out.print("\n\n - Age: ");
-                                    age = scanner.nextInt();
-                                    
-                                    if (age > 18 && age < 100) {
-                                        isValid = true;
-                                    }
-                                    else {
-                                        System.out.print("\n\n  ! -- Sorry, age must be between 18 and 100 to register -- !");
-                                        isValid = false;
+                                    ageToCheck = scanner.nextLine();
+                                    for (char digit: ageToCheck.toCharArray()) {
+                                        
+                                        if (!Character.isDigit(digit)) {
+                                            hasLetter = true;
+                                            break;
+                                        }
                                     }
 
+                                    if (hasLetter) {
+                                        isValid = false;
+                                        System.out.print("\n\n  ! -- age must be digits only with no space -- !");
+                                    }
+                                    else {
+                                        isValid = true;
+                                        age = Integer.parseInt(ageToCheck);
+                                    }
                                 } while (!isValid);
 
                                 // check if user available in users arrayList. If not, user will be registered and returned to CUSTOMER LOGIN menu
@@ -755,9 +782,295 @@ public class VehicleManager {
         if (VehicleManager.currentUser instanceof Customer) {
 
             int customerChoice = 0;
+
+            // Customer menu
+            System.out.print("\n\n\n  ---- WELCOME " + VehicleManager.currentUser.getUserName() + " ----");
+            do {
+                System.out.print(
+                    "\n\n  ---- CUSTOMER MAIN MENU ----" + "\n" +
+                    "\n" +
+                    "1 - View available vehicles" + "\n" +
+                    "2 - Book a vehicle" + "\n" +
+                    "3 - Cancel a booking" + "\n" +
+                    "4 - View my bookings" + "\n" +
+                    "0 - Log out" + "\n" +
+                    "\n" +
+                    "Enter your choice: "
+                );
+        
+                String customerChoiceInput = scanner.nextLine(); // Handle invalid input
+                if (customerChoiceInput.matches("\\d")) {
+                    customerChoice = Integer.parseInt(customerChoiceInput);
+                } else {
+                    System.out.println("\n  ! -- Invalid input. Please enter a valid number. -- !");
+                    continue;
+                }
+        
+                switch (customerChoice) {
+                    case 1:
+                        // View available vehicles
+                        printAvailableVehicles();
+                        break;
+        
+                    case 2:
+                    System.out.println("\n\n  ---- BOOK A VEHICLE ----");
+
+                    // Step 1: Prompt for the vehicle type (Car, Van, or Motorcycle)
+                    String vehicleType = "";
+                    boolean validType = false;
+                    boolean areAvailable = true;
+                    
+                    do {
+
+                        System.out.print("\n - Please choose a vehicle type (Car, Van, Motorcycle): ");
+                        vehicleType = scanner.nextLine().toLowerCase();
+                
+                        if (vehicleType.equals("car")) {
+                            
+                            validType = true;
+                            
+                            // Display the list of available cars
+                            printAvailableCars();
+
+                            if (getAvailableVehicles() == null) {
+                                areAvailable = false;
+                            }
+
+                        } 
+                        else if (vehicleType.equals("van")) {
+                            validType = true;
+
+                            // Display the list of available vans
+                            printAvailabeVans();
+
+                            if (getAvailableVehicles() == null) {
+                                areAvailable = false;
+                            }
+
+                        }
+                        else if (vehicleType.equals("motorcycle")) {
+                            validType = true;
+
+                            // Display the list of available motorcycles
+                            System.out.println("\n  ---- AVAILABLE MOTORCYCLES ----");
+                            printAvailableMotorCycles();
+
+                            if (getAvailableVehicles() == null) {
+                                areAvailable = false;
+                            }
+
+                        }
+                        else {
+                            System.out.println("\n  ! -- Invalid vehicle type. Please try again -- !");
+                        }
+                    } while (!validType);
+        
+                    if (!areAvailable) {
+                        break;
+                    }
+                    // Ask for the vehicle ID to book
+
+                    System.out.print("\n\n - Enter the ID of the vehicle you wish to book: ");
+                    String vehicleIdInput = scanner.nextLine();
+                
+                    // Get the vehicle by ID
+                    Vehicle vehicleToBook = VehicleManager.getVehicleByID(vehicleIdInput);
+                    
+                    // Check if the vehicle is available and proceed with booking
+                    if (vehicleToBook != null && vehicleToBook.isAvailable) {
+
+                        String startDateCheck, endDateCheck, month, day;
+                        int startMonth = 0, startDay = 0, endMonth = 0, endDay = 0;
+                        int year = 0;
+
+                        year = VehicleManager.dateNow.getYear();
+                        
+                        boolean isValid = false;
+
+                        // start Date prompt and error handling
+                        do {
+
+                            boolean hasLetter = false;
+
+                            System.out.print("\n\n - Enter the booking start date in the format: MM-dd with spaces (e.g. 2 4 | e.g. 11 30): ");
+                            startDateCheck = scanner.nextLine();
+
+                            if (startDateCheck.split(" ").length < 2) {
+                                System.out.print("\n\n  ! -- Invalid input -- !");
+                                continue;
+                            }
+
+
+                            month = startDateCheck.split(" ")[0];
+                            day = startDateCheck.split(" ")[1];
+
+                            for (char digit: month.toCharArray()) {
+                                
+                                if (!Character.isDigit(digit)) {
+                                    hasLetter = true;
+                                    break;
+                                }
+                            }
+
+                            for (char digit: day.toCharArray()) {
+
+                                if (!Character.isDigit(digit)) {
+                                    hasLetter = true;
+                                    break;
+                                }
+                            }
+
+                            if (hasLetter) {
+                                isValid = false;
+                                System.out.print("\n\n  ! -- Please enter numbers -- !");
+                            }
+                            else {
+
+                                startMonth = Integer.parseInt(month);
+                                startDay = Integer.parseInt(day);
+
+                                if ((startMonth > 0 && startMonth < 13) && (startDay > 0 && startDay < 32)) {
+                                    isValid = true;
+                                }
+                                else {
+                                    System.out.print("\n\n  ! -- Date format is incorrct -- !");
+                                    isValid = false;
+                                }
+                            }
+
+                        } while (!isValid);
+
+
+                        // end Date prompt and error handling
+                        do {
+                            boolean hasLetter = false;
+
+                            System.out.print("\n\n - Enter the booking end date in the format: MM-dd with spaces (e.g. 2 4 | e.g. 11 30): ");
+                            endDateCheck = scanner.nextLine();
+
+                            month = endDateCheck.split(" ")[0];
+                            day = endDateCheck.split(" ")[1];
+
+                            for (char digit: month.toCharArray()) {
+                                
+                                if (!Character.isDigit(digit)) {
+                                    hasLetter = true;
+                                    break;
+                                }
+                            }
+
+                            for (char digit: day.toCharArray()) {
+
+                                if (!Character.isDigit(digit)) {
+                                }
+                            }
+
+                            if (hasLetter) {
+                                isValid = false;
+                                System.out.print("\n\n  ! -- Please enter numbers -- !");
+                            }
+                            else {
+
+                                endMonth = Integer.parseInt(month);
+                                endDay = Integer.parseInt(day);
+
+                                if ((endMonth > 0 && endMonth < 13) && (endDay > 0 && endDay < 32)) {
+                                    isValid = true;
+                                }
+                                else {
+                                    System.out.print("\n\n  ! -- Date format is incorrct -- !");
+                                    isValid = false;
+                                }
+                            }
+
+                        } while (!isValid);
+                        LocalDate startDate = LocalDate.of(year, startMonth, startDay);
+                        LocalDate endDate = LocalDate.of(year, endMonth, endDay);
+                
+                        // Call bookVehicle to complete the booking process
+                        if (VehicleManager.bookVehicle(vehicleToBook, startDate, endDate, (Customer) VehicleManager.currentUser)) {
+
+                            System.out.print("\n\n  ---- Vehicle Info ----");
+                            vehicleToBook.getVehicleInfo();
+
+                            System.out.print(VehicleManager.currentUser);
+                        }
+                        else {
+
+                            System.out.println("Failed to book the vehicle. It might already be booked or unavailable.");
+                        }
+                    } else {
+
+                        System.out.println("\n\n  ! -- Invalid vehicle ID or vehicle is not available -- !");
+                    }
+                    break;
+        
+                    case 3:
+                        // System.out.println("\n\n  ---- CANCEL A BOOKING ----");
+        
+                        // // Show the list of customer bookings to cancel
+                        // System.out.println("Fetching your bookings...");
+                        // List<Booking> bookings = VehicleManager.getCustomerBookings((Customer) VehicleManager.currentUser);
+                        // if (bookings.isEmpty()) {
+                        //     System.out.println("No bookings found.");
+                        // } else {
+                        //     // List all bookings with options to cancel
+                        //     for (int i = 0; i < bookings.size(); i++) {
+                        //         System.out.println((i + 1) + ". " + bookings.get(i).toString());
+                        //     }
+                        //     System.out.print("Enter the booking number you want to cancel: ");
+                        //     String cancelChoiceInput = scanner.nextLine();
+                        //     if (cancelChoiceInput.matches("\\d")) {
+                        //         int cancelChoice = Integer.parseInt(cancelChoiceInput);
+                        //         if (cancelChoice > 0 && cancelChoice <= bookings.size()) {
+                        //             Booking bookingToCancel = bookings.get(cancelChoice - 1);
+                        //             if (cancelBooking(bookingToCancel)) {
+                        //                 System.out.println("Booking canceled successfully.");
+                        //             } else {
+                        //                 System.out.println("Failed to cancel the booking. Try again.");
+                        //             }
+                        //         } else {
+                        //             System.out.println("Invalid choice.");
+                        //         }
+                        //     } else {
+                        //         System.out.println("Invalid input.");
+                        //     }
+                        // }
+                        // break;
+        
+                    case 4:
+                        // System.out.println("\n\n  ---- VIEW MY BOOKINGS ----");
+        
+                        // Show the list of customer bookings
+                        System.out.println("Fetching your bookings...");
+                        
+                        ArrayList<Booking> myBookings = ((Customer) VehicleManager.currentUser).getBookings();
+
+                        if (myBookings.isEmpty()) {
+
+                            System.out.println("\n\n  ! -- No bookings found.");
+                        } else {
+                            for (Booking booking : myBookings) {
+                                System.out.println(booking.toString());
+                            }
+                        }
+                        break;
+        
+                    case 0:
+                        System.out.println("\n\n Logging out...");
+                        break;
+        
+                    default:
+                        System.out.println("\n  ! -- Invalid choice. Please select a valid menu option. -- !");
+                }
+        
+            } while (customerChoice != 0);
         }
+    
 
     }
+
+    
 
     public static void addVehicle(Vehicle newVehicle) {
         
@@ -794,7 +1107,7 @@ public class VehicleManager {
         }
     }
 
-    public boolean isAvailable(Vehicle vehicle) {
+    public static boolean isAvailable(Vehicle vehicle) {
 
         int vehicleIndex = searchVehicleIndex(vehicle);
 
@@ -817,6 +1130,10 @@ public class VehicleManager {
         boolean allNull = true;
         Vehicle[] availableVehicles = new Vehicle[VehicleManager.MAX_VEHICLES - VehicleManager.vehicleReserved];
         
+        if (VehicleManager.vehicles == null) {
+            return null;
+        }
+
         for (int i = 0; i < VehicleManager.vehicles.length; i++) {
 
             if (VehicleManager.vehicles[i] != null) {
@@ -827,6 +1144,7 @@ public class VehicleManager {
                     counter++;
                 }
             }
+  
 
         }
 
@@ -1197,12 +1515,11 @@ public class VehicleManager {
 
         Vehicle[] availableVehicles = getAvailableVehicles();
 
-        if (availableVehicles == null) {
-            return null;
-        }
-
         for (Vehicle vehicle: availableVehicles) {
             
+            if (vehicle.getVehicleID() == "") {
+                return null;
+            }
             if (vehicle.getVehicleID().equals(id)) {
                 return vehicle;
             }
@@ -1214,18 +1531,25 @@ public class VehicleManager {
 
     }
 
-    public static boolean bookVehicle(Vehicle vehicle, String startDate, String endDate, User currentUser) {
+    public static boolean bookVehicle(Vehicle vehicle, LocalDate startDate, LocalDate endDate, User currentUser) {
 
         // Check if vehicle is available
         if (!vehicle.isAvailable) {
+
             System.out.print("\n\n  ! -- The vehicle is unavailable -- !");
             return false;
         }
 
+
+
+        Booking newBooking = new Booking(vehicle, VehicleManager.dateNow, startDate, endDate, vehicle.getPrice(), VehicleManager.CURRENCY, VehicleManager.dateNow);
+
+        bookings.add(newBooking);
+
+        vehicle.isAvailable = false;
+    
         return true;
-
     }
-
 }
 
 
@@ -1242,3 +1566,159 @@ public class VehicleManager {
 //     "6 - Display all vehicles in the lot " + "\n" +
 //     "0 - Exit"
 // );
+
+
+            // // Customer menu
+            // System.out.print("\n\n\n  ---- WELCOME " + VehicleManager.currentUser.getUserName() + " ----");
+            // do {
+            //     System.out.print(
+            //         "\n\n  ---- CUSTOMER MAIN MENU ----" + "\n" +
+            //         "\n" +
+            //         "1 - View available vehicles" + "\n" +
+            //         "2 - Book a vehicle" + "\n" +
+            //         "3 - Cancel a booking" + "\n" +
+            //         "4 - View my bookings" + "\n" +
+            //         "0 - Log out" + "\n" +
+            //         "\n" +
+            //         "Enter your choice: "
+            //     );
+        
+            //     String customerChoiceInput = scanner.nextLine(); // Handle invalid input
+            //     if (customerChoiceInput.matches("\\d")) {
+            //         customerChoice = Integer.parseInt(customerChoiceInput);
+            //     } else {
+            //         System.out.println("\n  ! -- Invalid input. Please enter a valid number. -- !");
+            //         continue;
+            //     }
+        
+        //         switch (customerChoice) {
+        //             case 1:
+        //                 // View available vehicles
+        //                 printAvailableVehicles();
+        //                 break;
+        
+        //             case 2:
+        //             System.out.println("\n\n  ---- BOOK A VEHICLE ----");
+
+        //             // Step 1: Prompt for the vehicle type (Car, Van, or Motorcycle)
+        //             String vehicleType = "";
+        //             boolean validType = false;
+                
+        //             // Loop until a valid type is selected
+        //             do {
+
+        //                 System.out.print("Please choose a vehicle type (Car, Van, Motorcycle): ");
+        //                 vehicleType = scanner.nextLine().toLowerCase();
+                
+        //                 if (vehicleType.equals("car")) {
+                            
+        //                     validType = true;
+                            
+        //                     // Display the list of available cars
+        //                     printAvailableCars();
+
+        //                 } 
+        //                 else if (vehicleType.equals("van")) {
+        //                     validType = true;
+
+        //                     // Display the list of available vans
+        //                     printAvailabeVans();
+
+        //                 }
+        //                 else if (vehicleType.equals("motorcycle")) {
+        //                     validType = true;
+
+        //                     // Display the list of available motorcycles
+        //                     System.out.println("\n  ---- AVAILABLE MOTORCYCLES ----");
+        //                     printAvailableMotorCycles();
+        //                 } else {
+        //                     System.out.println("\n  ! -- Invalid vehicle type. Please try again -- !");
+        //                 }
+        //             } while (!validType);
+                
+        //             // Ask for the vehicle ID to book
+
+        //             System.out.print("Enter the ID of the vehicle you wish to book: ");
+        //             String vehicleIdInput = scanner.nextLine();
+                
+        //             // Get the vehicle by ID
+        //             Vehicle vehicleToBook = VehicleManager.getVehicleByID(vehicleIdInput);
+                    
+        //             // Check if the vehicle is available and proceed with booking
+        //             if (vehicleToBook != null && vehicleToBook.isAvailable) {
+
+        //                 System.out.print(" - Enter the booking start date (YYYY-MM-DD): ");
+        //                 String startDate = scanner.nextLine();
+        //                 System.out.print(" - Enter the booking end date (YYYY-MM-DD): ");
+        //                 String endDate = scanner.nextLine();
+                
+        //                 // Call bookVehicle to complete the booking process
+        //                 if (VehicleManager.bookVehicle(vehicleToBook, startDate, endDate, (Customer) VehicleManager.currentUser)) {
+        //                     System.out.println("Vehicle booked successfully!");
+        //                 } else {
+        //                     System.out.println("Failed to book the vehicle. It might already be booked or unavailable.");
+        //                 }
+        //             } else {
+        //                 System.out.println("Invalid vehicle ID or vehicle is not available.");
+        //             }
+        //             break;
+        
+        //             case 3:
+        //                 System.out.println("\n\n  ---- CANCEL A BOOKING ----");
+        
+        //                 // Show the list of customer bookings to cancel
+        //                 System.out.println("Fetching your bookings...");
+        //                 List<Booking> bookings = VehicleManager.getCustomerBookings((Customer) VehicleManager.currentUser);
+        //                 if (bookings.isEmpty()) {
+        //                     System.out.println("No bookings found.");
+        //                 } else {
+        //                     // List all bookings with options to cancel
+        //                     for (int i = 0; i < bookings.size(); i++) {
+        //                         System.out.println((i + 1) + ". " + bookings.get(i).toString());
+        //                     }
+        //                     System.out.print("Enter the booking number you want to cancel: ");
+        //                     String cancelChoiceInput = scanner.nextLine();
+        //                     if (cancelChoiceInput.matches("\\d")) {
+        //                         int cancelChoice = Integer.parseInt(cancelChoiceInput);
+        //                         if (cancelChoice > 0 && cancelChoice <= bookings.size()) {
+        //                             Booking bookingToCancel = bookings.get(cancelChoice - 1);
+        //                             if (cancelBooking(bookingToCancel)) {
+        //                                 System.out.println("Booking canceled successfully.");
+        //                             } else {
+        //                                 System.out.println("Failed to cancel the booking. Try again.");
+        //                             }
+        //                         } else {
+        //                             System.out.println("Invalid choice.");
+        //                         }
+        //                     } else {
+        //                         System.out.println("Invalid input.");
+        //                     }
+        //                 }
+        //                 break;
+        
+        //             case 4:
+        //                 System.out.println("\n\n  ---- VIEW MY BOOKINGS ----");
+        
+        //                 // Show the list of customer bookings
+        //                 System.out.println("Fetching your bookings...");
+        //                 List<Booking> myBookings = VehicleManager.getCustomerBookings((Customer) VehicleManager.currentUser);
+        //                 if (myBookings.isEmpty()) {
+        //                     System.out.println("No bookings found.");
+        //                 } else {
+        //                     for (Booking booking : myBookings) {
+        //                         System.out.println(booking.toString());
+        //                     }
+        //                 }
+        //                 break;
+        
+        //             case 0:
+        //                 System.out.println("\n\n Logging out...");
+        //                 break;
+        
+        //             default:
+        //                 System.out.println("\n  ! -- Invalid choice. Please select a valid menu option. -- !");
+        //         }
+        
+        //     } while (customerChoice != 0);
+        // }
+        

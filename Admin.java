@@ -5,9 +5,6 @@ public class Admin extends User {
 
     private static final String AUTHORIZE_CODE = "authorize12!@";
 
-    private VehicleManager vehicleManager;
-
-
     Admin() {
 
     }

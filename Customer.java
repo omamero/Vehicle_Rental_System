@@ -1,11 +1,13 @@
 package Vehicle_Rental_System;
 
+import java.util.ArrayList;
+
 public class Customer extends User {
     // Constants
     private static final int MAX_BOOKINGS = 3;
 
     // Attributes
-    private Booking[] customerBookings = new Booking[MAX_BOOKINGS];
+    public ArrayList<Booking> bookings = new ArrayList<Booking>();
     protected int noVehiclesRented;
     private String licenseType;
     private boolean legalAge;
@@ -32,6 +34,10 @@ public class Customer extends User {
     // Business Logic
     public boolean isEligible() {
         return legalAge && hasLicense;
+    }
+
+    public ArrayList<Booking> getBookings() {
+        return this.bookings;
     }
 }
 

@@ -1,13 +1,13 @@
 package Vehicle_Rental_System;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 abstract public class Payment {
     private double totalAmount;
     private String currency;
-    private Date paymentDate;
+    private LocalDate paymentDate; 
 
-    public Payment(double totalAmount, String currency, Date paymentDate) {
+    public Payment(double totalAmount, String currency, LocalDate paymentDate) {
         this.totalAmount = totalAmount;
         this.currency = currency;
         this.paymentDate = paymentDate;
@@ -21,11 +21,11 @@ abstract public class Payment {
         return totalAmount;
     }
 
-    public void setPaymentDate(Date date) {
+    public void setPaymentDate(LocalDate date) { 
         this.paymentDate = date;
     }
 
-    public Date getPaymentDate() {
+    public LocalDate getPaymentDate() { 
         return paymentDate;
     }
 
@@ -38,8 +38,6 @@ abstract public class Payment {
     }
 
     public void processPayment() {
-        
+        // Process payment logic here
     }
 }
-
-

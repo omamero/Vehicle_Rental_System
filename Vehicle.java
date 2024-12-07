@@ -84,16 +84,16 @@ abstract public class Vehicle {
 
     // Method to get all vehicle information
     public void getVehicleInfo() {
-        System.out.println("Vehicle ID: " + vehicleID);
-        System.out.println("Name: " + name);
-        System.out.println("Model: " + model);
-        System.out.println("Fuel Type: " + fuelType);
-        System.out.println("Year: " + year);
-        System.out.println("Price: " + price);
-        System.out.println("Number of Seats: " + noSeats);
-        System.out.println("Make: " + make);
-        System.out.println("Color: " + color);
-        System.out.println("Has Insurance: " + hasInsurance);
-        System.out.println("Is Available: " + isAvailable);
+        System.out.print("\n\n    - Vehicle ID: " + vehicleID);
+        System.out.print("\n    - Name: " + name);
+        System.out.print("\n    - Model: " + model);
+        System.out.print("\n    - Fuel Type: " + fuelType);
+        System.out.print("\n    - Year: " + year);
+        System.out.print("\n    - Price: " + price);
+        System.out.print("\n    - Number of Seats: " + noSeats);
+        System.out.print("\n    - Make: " + make);
+        System.out.print("\n    - Color: " + color);
+        System.out.print("\n    - Has Insurance: " + hasInsurance);
+        System.out.print("\n    - Is Available: " + isAvailable);
     }
 }

@@ -1,6 +1,6 @@
 package Vehicle_Rental_System;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Credit extends Payment {
     private String cardNumber;
@@ -9,7 +9,7 @@ public class Credit extends Payment {
     private String expireMonth;
     private String CCV;
 
-    public Credit(double totalAmount, String currency, Date paymentDate, String cardNumber, String nameOnCard, String expireYear, String expireMonth, String CCV) {
+    public Credit(double totalAmount, String currency, LocalDate paymentDate, String cardNumber, String nameOnCard, String expireYear, String expireMonth, String CCV) {
         super(totalAmount, currency, paymentDate);
         this.cardNumber = cardNumber;
         this.nameOnCard = nameOnCard;

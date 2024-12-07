@@ -1,12 +1,12 @@
 package Vehicle_Rental_System;
 
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Cash extends Payment {
     private double cashReceived;
 
-    public Cash(double totalAmount, String currency, Date paymentDate, double cashReceived) {
+    public Cash(double totalAmount, String currency, LocalDate paymentDate, double cashReceived) {
         super(totalAmount, currency, paymentDate);
         this.cashReceived = cashReceived;
     }
