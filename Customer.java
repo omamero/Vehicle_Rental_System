@@ -8,7 +8,7 @@ public class Customer extends User {
 
     // Attributes
     public ArrayList<Booking> bookings = new ArrayList<Booking>();
-    protected int noVehiclesRented;
+    public int noVehiclesRented;
     private String licenseType;
     private boolean legalAge;
     private boolean hasLicense;

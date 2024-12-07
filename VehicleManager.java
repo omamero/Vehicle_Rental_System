@@ -56,6 +56,7 @@ public class VehicleManager {
             true
         );
         VehicleManager.vehicles[Integer.parseInt(car1.getVehicleID()) - 1] = car1;
+        VehicleManager.noVehicles++;
 
 
         
@@ -695,8 +696,7 @@ public class VehicleManager {
                     "3 - Update a vehicle" + "\n" +
                     "4 - Remove a vehicle" + "\n" +
                     "5 - View all current bookings" + "\n" +
-                    "6 - Approve/Reject pending bookings" + "\n" +
-                    "7 - Log out" + "\n" +
+                    "6 - Log out" + "\n" +
                     "\n" +
                     "Enter your choice: "
                 );
@@ -753,7 +753,46 @@ public class VehicleManager {
         
                     case 4:
                         System.out.println("\n\n  ---- REMOVE VEHICLE ----");
-                        // Provide vehicle removal logic
+                        
+                        validType = false;
+                        do {
+                            System.out.print("\n\n - Enter vehicle type (Car, Van, Motorcycle): ");
+                            String type = scanner.nextLine().toLowerCase();
+    
+                            if (type.equals("car")) {
+                                
+                                validType = true;
+
+                                printAvailableCars();
+                
+
+                            }
+                            else if (type.equals("van")) {
+
+                                validType = true;
+                                printAvailabeVans();
+
+                            }
+                            else if (type.equals("motorcycle")) {
+
+                                validType = true;
+                                printAvailableMotorCycles();
+
+                            }
+                            else {
+                                System.out.print("\n\n  ! -- Invalid vehicle type. Please try again. -- !");
+                                validType = false;
+                            }
+                        } while (!validType);
+                        
+                        System.out.print("\n\n - Enter the ID of the vehicle you wish to remove: ");
+                        String vehicleIdInput = scanner.nextLine();
+                    
+                        // Get the vehicle by ID
+                        Vehicle vehicleToRemove = VehicleManager.getVehicleByID(vehicleIdInput);
+
+                        deleteVehicle(vehicleToRemove);
+
                         break;
         
                     case 5:
@@ -762,16 +801,13 @@ public class VehicleManager {
                         break;
         
                     case 6:
-                        System.out.println("\n\n  ---- APPROVE/REJECT BOOKINGS ----");
-                        // Approve or reject bookings
-                        break;
-        
-                    case 7:
+
                         System.out.println("\n\n Logging out...");
                         break;
         
                     default:
                         System.out.println("\n  ! -- Invalid choice. Please select a valid menu option -- !");
+                        break;
                 }
         
             } while (adminChoice != 7);
@@ -1076,7 +1112,9 @@ public class VehicleManager {
         
         String vehicleID = String.valueOf(VehicleManager.noVehicles + 1);
         newVehicle.setVehicleID(vehicleID);
-        VehicleManager.vehicles[VehicleManager.noVehicles] = newVehicle; 
+        VehicleManager.vehicles[VehicleManager.noVehicles] = newVehicle;
+
+        VehicleManager.noVehicles++;
     }
 
     public static void updateVehicle(Vehicle oldVehicle, Vehicle newVehicle) {
@@ -1098,10 +1136,10 @@ public class VehicleManager {
         int indexToRemove = VehicleManager.searchVehicleIndex(vehicleToRemove);
 
         if (indexToRemove < 0) {
-            System.out.println("  -- There is no vehicle with the name: " + vehicleToRemove.name);
+            System.out.println("\n\n  -- There is no vehicle with the name: " + vehicleToRemove.name);
         }
         else {
-            for (int i = indexToRemove; i < (VehicleManager.noVehicles - 1); i++) {
+            for (int i = indexToRemove; i < (VehicleManager.noVehicles); i++) {
                 VehicleManager.vehicles[i] = VehicleManager.vehicles[i + 1];
             }
         }
